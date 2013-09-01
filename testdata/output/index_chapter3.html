@@ -116,7 +116,7 @@
 </header>
 <p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanには\tdefという特殊なトークンを展開し、保持するマクロが定義されています。基本的な使い方は&yen;edefとほぼ同じです。</p>
 <p>\edefの欠点として、&yen;verbを使うことが出来ないことがあります。これは、\edefの{～}が引数であり、{}の中身がトークンとして先に読み込まれてしまい、\verbを実行できない為です。この欠点を補う為に、\tdefを定義しておきました。</p>
-<p>\tdefにおいて、{～}は<span style="color:red;"> 引数ではありません</span>。\tdefにおける引数は\tdef#1となっています。#1は\nameの様なエスケープシーケンスです。\tdefが発行された後には必ず、一番最初に「{」が来なくてはなりません。なお、これは展開された結果一番最初に「{」があれば良く、以下の様に\hogeが展開され、\bgroupが展開された結果「{」が来るような場合は許可されます。このルールを破った場合は\tdefは定義を行いません。</p>
+<p>\tdefにおいて、{～}は<span style="color:red;"> 引数ではありません</span>。\tdefにおける引数は\tdef#1となっています。#1は\nameの様なエスケープシーケンスです。\tdefが発行された後には必ず、一番最初に「{」が来なくてはなりません。なお、これは展開された結果一番最初に「{」があれば良く、以下の様に\hogeが展開され、\bgroupが展開された結果「{」が来るような場合は許可されます。また、\tdefによる定義中にで\tdefを使うことは出来ません。これらのルールを破った場合は\tdefは定義を行いません。</p>
 <code class="nhlight nhlight-TeX">
 <pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">\def</span><span class="command-token">\hoge</span><span class="block-token">{</span><span class="command-token">\bgroup</span>&nbsp;<span class="keyword-token">\verb</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\tdef</span><span class="command-token">\hoge</span><span class="command-token">\hoge</span><span class="text-token">+\(^_^)\+</span><span class="block-token">}</span></span></li></ol></pre></code>
 <p>さらに、上の例では\tdefで\hogeの定義を書き換えていますが、実際に\tdefが定義を行うのは}の後であるため、\hogeの後の二つ目の\hogeは\bgroup \verbに展開されます。\hogeの実行例↓</p>

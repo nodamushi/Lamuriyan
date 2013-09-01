@@ -691,6 +691,7 @@ while(processToken())
         if(this.tdefblock==tblock ){
            tdefblock = null;
            tdefblockmode=false;
+           tdefname=null;
         }
     }
     
@@ -702,6 +703,8 @@ while(processToken())
             if(t.isProtected()){
                 if(tdefblock==null){
                     tdefblockmode =false;
+                    tdefblock=null;
+                    tdefname=null;
                     outputBuffer.push(t);
                     printError("\\tdefの次には{が来なくてはなりません。"+t);
                     outputToEnvironment();
@@ -725,6 +728,8 @@ while(processToken())
                 case MATHESCAPE:
                     if(tdefblock==null){
                         tdefblockmode =false;
+                        tdefblock=null;
+                        tdefname=null;
                         outputBuffer.push(t);
                         printError("\\tdefの次には{が来なくてはなりません。"+t);
                         outputToEnvironment();
@@ -738,6 +743,8 @@ while(processToken())
                     if(c!=null && "on".equals(c.getAsString())){
                         if(tdefblock==null){
                             tdefblockmode =false;
+                            tdefblock=null;
+                            tdefname=null;
                             outputBuffer.push(t);
                             printError("\\tdefの次には{が来なくてはなりません。"+t);
                             outputToEnvironment();
