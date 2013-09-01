@@ -1,0 +1,243 @@
+% <math>で用いる参照文字の定義です
+% 足りない物があったら自分で定義を追加してください。
+
+\bgroup%\mをグローバルに登録しない為。
+%&と#を普通の文字に変更
+\catcode `\&=12
+\catcode `\#=12
+%\mathescapeを書くのが面倒くさいので、mを定義。
+\def\m{\global\mathescape}
+% \mathescape \name 置換文字列,[iontIONT]
+% i=mi,o=mo,n=mn,t=mtext
+% 大文字は\sum^1 とかの^1が横ではなく、上につく様になる
+% 小文字だと横につく。
+
+%%%%%%%%%%%ギリシャ文字%%%%%%%%%%%%%
+\m\alpha &#945;,i\m\beta &#946;,i
+\m\gamma &#947;,i\m\delta &#948;,i
+\m\epsilon &#949;,i\m\zeta &#950;,i
+\m\eta &#951;,i\m\theta &#952;,i
+\m\iota &#953;,i\m\kappa &#954;,i
+\m\lambda &#955;,i\m\mu &#956;,i
+\m\nu &#957;,i\m\xi &#958;,i
+\m\omicron &#959;,i\m\pi &#960;,i
+\m\rho &#961;,i\m\sigma &#963;,i
+\m\tau &#964;,i\m\upsilon &#965;,i
+\m\phi &#966;,i\m\chi &#967;,i
+\m\psi &#968;,i\m\omega &#969;,i
+\m\sigmaf &#962;,i\m\Alpha &#913;,i
+\m\Beta &#914;,i\m\Gamma &#915;,i
+\m\Delta &#916;,i\m\Epsilon &#917;,i
+\m\Zeta &#918;,i\m\Eta &#919;,i
+\m\Theta &#920;,i\m\Iota &#921;,i
+\m\Kappa &#922;,i\m\Lambda &#923;,i
+\m\Mu &#924;,i\m\Nu &#925;,i
+\m\Xi &#926;,i\m\Omicron &#927;,i
+\m\Pi &#928;,i\m\Rho &#929;,i
+\m\Sigma &#931;,i\m\Tau &#932;,i
+\m\Upsilon &#933;,i\m\Phi &#934;,i
+\m\Chi &#935;,i\m\Psi &#936;,i
+\m\Omega &#937;,i
+%%%%%%%%%% ギリシャ文字終了
+
+%以下からは、http://www.hinet.mydns.jp/?TeX_mathml.rbを参考にしました。
+%%Σ等上にsb,spがつく記号
+\m\sum &sum;,O
+\m\prod &prod;,O
+\m\coprod &coprod;,O
+\m\bigcap &bigcap;,O
+\m\bigcup &bigcup;,O
+\m\bigsqcup &bigsqcup;,O
+\m\bigvee &bigvee;,O
+\m\bigwedge &bigwedge;,O
+\m\bigodot &bigodot;,O
+\m\bigotimes &bigotimes;,O
+\m\bigoplus &bigoplus;,O
+\m\biguplus &biguplus;,O
+
+%%記号
+\m\aleph &aleph;,a
+\m\imath &imath;,a
+\m\jmath &jmath;,a
+\m\ell &ell;,o
+\m\wp &wp;,o
+\m\Re &Re;,a
+\m\emptyset &empty;,a
+\m\flat &flat;,o
+\m\natural &natural;,o
+\m\sharp &sharp;,o
+\m\spadesuit &spadesuit;,o
+\m\Diamond &Diamond;,o
+\m\triangle &triangle;,o
+\m\clubsuit &clubsuit;,o
+\m\diamondsuit &diamondsuit;,o
+\m\heartsuit &heartsuit;,o
+\m\Im &Im;,a
+\m\mho &mho;,o
+\m\angle &angle;,o
+\m\hbar &hslash;,a
+\m\Box &square;,o
+\m\infty &infin;,n
+
+%%%%通常の演算子%%%%%%%%%%%%%
+\m\dots &mldr;,o
+\m\ldots &mldr;,o
+\m\cdots &ctdot;,o
+\m\surd &Sqrt;,o
+\m\partial &part;,o
+\m\exists &exist;,o
+\m\neg &not;,o
+\m\lhd &vltri;,o
+\m\rhd &vrtri;,o
+\m\unlhd &ltrie;,o
+\m\unrhd &rtrie;,o
+\m\neq &ne;,o
+\m\cdot &sdot;,o
+\m\amalg &amalg;,o
+\m\circ &cir;,o
+\m\asymp &asymp;,o
+\m\preceq &prcue;,o
+\m\leadsto &zigrarr;,o
+\m\to &rightarrow;,o
+\m\int &int;,o
+\m\oint &oint;,o
+\m\pm &pm;,o
+\m\prime &prime;,o
+\m\nabla &nabla;,a
+\m\top &top;,o
+\m\bot &bot;,o
+\m\forall &forall;,o
+\m\vdash &vdash;,o
+\m\dashv &dashv;,o
+\m\mp &mp;,o
+\m\times &times;,o
+\m\div &div;,o
+\m\ast &ast;,o
+\m\star &star;,o
+\m\dagger &dagger;,o
+\m\ddagger &ddagger;,o
+\m\cap &cap;,o
+\m\cup &cup;,o
+\m\uplus &uplus;,o
+\m\sqcap &sqcap;,o
+\m\sqcup &sqcup;,o
+\m\vee &vee;,o
+\m\wedge &wedge;,o
+\m\setminus &setminus;,o
+\m\wr &wr;,o
+\m\bullet &bullet;,o
+\m\diamond &diamond;,o
+\m\oslash &oslash;,o
+\m\odot &odot;,o
+\m\bigcirc &bigcirc;,o
+\m\bigtriangleup &bigtriangleup;,o
+\m\bigtriangledown &bigtriangledown;,o
+\m\triangleleft &triangleleft;,o
+\m\triangleright &triangleright;,o
+\m\oplus &oplus;,o
+\m\ominus &ominus;,o
+\m\otimes &otimes;,o
+\m\le &le;,o
+\m\leq &leq;,o
+\m\ge &ge;,o
+\m\geq &geq;,o
+\m\sim &sim;,o
+\m\ll &ll;,o
+\m\gg &gg;,o
+\m\doteq &doteq;,o
+\m\simeq &simeq;,o
+\m\subset &subset;,o
+\m\supset &supset;,o
+\m\approx &approx;,o
+\m\subseteq &subseteq;,o
+\m\supseteq &supseteq;,o
+\m\cong &cong;,o
+\m\smile &smile;,o
+\m\sqsubset &sqsubset;,o
+\m\sqsupset &sqsupset;,o
+\m\equiv &equiv;,o
+\m\frown &frown;,o
+\m\sqsubseteq &sqsubseteq;,o
+\m\sqsupseteq &sqsupseteq;,o
+\m\propto &propto;,o
+\m\bowtie &bowtie;,o
+\m\in &in;,o
+\m\ni &ni;,o
+\m\prec &prec;,o
+\m\succ &succ;,o
+\m\succeq &sccue;,o
+\m\models &models;,o
+\m\perp &perp;,o
+\m\parallel &parallel;,o
+\m\mid &mid;,o
+
+%%矢印%%%%%%%%%%%%%%%
+\m\rightarrow &rightarrow;,o
+\m\leftarrow &leftarrow;,o
+\m\uparrow &uparrow;,o
+\m\downarrow &downarrow;,o
+\m\longrightarrow &longrightarrow;,o
+\m\longleftarrow &longleftarrow;,o
+\m\Rightarrow &Rightarrow;,o
+\m\Leftarrow &Leftarrow;,o
+\m\Uparrow &Uparrow;,o
+\m\Downarrow &Downarrow;,o
+\m\Longrightarrow &Longrightarrow;,o
+\m\Longleftarrow &Longleftarrow;,o
+\m\leftrightarrow &leftrightarrow;,o
+\m\longleftrightarrow &longleftrightarrow;,o
+\m\Leftrightarrow &Leftrightarrow;,o
+\m\Longleftrightarrow &Longleftrightarrow;,o
+\m\updownarrow &updownarrow;,o
+\m\Updownarrow &Updownarrow;,o
+\m\mapsto &mapsto;,o
+\m\longmapsto &mapsto;,o
+\m\hookrightarrow &hookrightarrow;,o
+\m\hookleftarrow &hookleftarrow;,o
+\m\rightharpoonup &rightharpoonup;,o
+\m\leftharpoonup &leftharpoonup;,o
+\m\rightharpoondown &rightharpoondown;,o
+\m\leftharpoondown &leftharpoondown;,o
+\m\rightleftharpoons &rightleftharpoons;,o
+\m\nearrow &nearrow;,o
+\m\searrow &searrow;,o
+\m\swarrow &swarrow;,o
+\m\nwarrow &nwarrow;,o
+
+\m\arccos arccos,i
+\m\ker ker,i
+\m\arcsin arcsin,i
+\m\cos cos,i
+\m\cosh cosh,i
+\m\csc csc,i
+\m\min min,i
+\m\deg deg,i
+\m\exp exp,i
+\m\sinh sinh,i
+\m\gcd gcd,i
+\m\lg lg,i
+\m\ln ln,i
+\m\Pr Pr,i
+\m\arctan arctan,i
+\m\cot cot,i
+\m\det det,i
+\m\hom hom,i
+\m\log log,i
+\m\sec sec,i
+\m\tan tan,i
+\m\arg arg,i
+\m\coth coth,i
+\m\dim dim,i
+\m\max max,i
+\m\sin sin,i
+\m\tanh tanh,i
+
+\m\sup sup,I
+\m\lim lim,I
+\m\inf inf,I
+\m\limsup lim sup,I
+\m\liminf lim inf,I
+
+
+\egroup
+%eof

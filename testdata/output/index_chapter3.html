@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html><head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+
+<title>
+第3章　　マクロ
+</title>
+
+<meta content="noarchive,noindex,nofollow" name="robots">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" type="text/javascript">
+ </script>
+<link href="ntex.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div id="mainbody">
+<header id="pagetitle">
+<h1>
+第3章　　マクロ
+</h1>
+</header>
+
+
+
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanは当然マクロが使えます。が、nodamushiがT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xの知識が曖昧すぎる為、動けば良いじゃんの精神にしたがってかなりテキトーな実装になっています。実際のT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xはこうだよ、こういう動作にした方が良いよと言うことがありましたら、遠慮無く@nodamushiにリプを送って下さい。参考にします。参考にするだけで、実装するかは分かりません。</p>
+<nav>
+<header>
+<h1>目次</h1>
+</header>
+<ul>
+<li>
+<a class="ref" href="#__section:019">
+<span class="itemnumber">3-1</span><span class="itemtitle">マクロ呼び出し</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:020">
+<span class="itemnumber">3-2</span><span class="itemtitle">マクロを定義する</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:021">
+<span class="itemnumber">3-3</span><span class="itemtitle">展開したトークンを保持する</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:022">
+<span class="itemnumber">3-3.1</span><span class="itemtitle">\edefや\protected@edefについて</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:023">
+<span class="itemnumber">3-3.2</span><span class="itemtitle">\tdefについて</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:024">
+<span class="itemnumber">3-4</span><span class="itemtitle">リスト</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:025">
+<span class="itemnumber">3-4.1</span><span class="itemtitle">リスト生成</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:026">
+<span class="itemnumber">3-4.2</span><span class="itemtitle">追加関連（set push unshift）</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:027">
+<span class="itemnumber">3-4.3</span><span class="itemtitle">取得関連（get pop shift）</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:028">
+<span class="itemnumber">3-4.4</span><span class="itemtitle">長さ</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:029">
+<span class="itemnumber">3-4.5</span><span class="itemtitle">リストが空かどうか</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:030">
+<span class="itemnumber">3-4.6</span><span class="itemtitle">各要素に対して処理をする</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:031">
+<span class="itemnumber">3-5</span><span class="itemtitle">今後の予定</span></a>
+</li>
+</ul>
+</nav>
+<section class="sect" id="__section:019">
+<header>
+<h1><span class="secnumber">3-1章</span>マクロ呼び出し</h1>
+</header>
+<p>通常のマクロ呼び出しと同じように呼び出すのですが、LaTeX書いてて常々思うんですが、<span class="boldweight" style="color:cred;">マクロ名に日本語使うことなくね？</span>私、マクロ名書いた後に日本語が来ると、半角／全角キーを押すことに集中してしまうが為、スペースキーを押すことを忘れ、エラーをよく出してます。むかつきます。</p>
+<p>なので、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはCharCategoryのアルファベットは、a-z,A-Zのみを登録しています。日本語は使えません。よって「\LamuriyanはCharCategory…」の様にマクロ名の後にスペース無く日本語を入力しても問題ありません。もちろん、マクロ名の後のスペースは無視されるので、書いても問題ありません。</p>
+</section>
+<section class="sect" id="__section:020">
+<header>
+<h1><span class="secnumber">3-2章</span>マクロを定義する</h1>
+</header>
+<p>\defと\newcommandを定義しています。使い方は大体本家T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>XやLaTeXと同じだと思います。パラグラフの扱いがどうのこうのとかいうのをどっかで読んだんですが、正直よーわからんので、無視してます。改行どこまでも続いてもオーケー。</p>
+</section>
+<section class="sect" id="__section:021">
+<header>
+<h1><span class="secnumber">3-3章</span>展開したトークンを保持する</h1>
+</header>
+<section class="ssect" id="__section:022">
+<header>
+<h1><span class="secnumber">3-3.1</span>\edefや\protected@edefについて</h1>
+</header>
+<p>いわゆる\edefに関しては、\edefと\protedted@edefが定義されています。たぶん、どちらも大体LaTeXと同じ挙動を示すんじゃないかなーと思っています。</p>
+<p>注意して貰いたい事は、\edef,\protedted@edefはトークンを保持するだけであり、DOM（TeXで言えばBoxにあたるものか）を保持することは出来ません。\edef,\protected@edef内部でDOMを作成した場合、環境に挿入されます。\Lamuriyan(=L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyan)などはDOMを生成するコマンドなので、うっかり混ぜてしまうことがないよう注意してください。</p>
+</section>
+<section class="ssect" id="__section:023">
+<header>
+<h1><span class="secnumber">3-3.2</span>\tdefについて</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanには\tdefという特殊なトークンを展開し、保持するマクロが定義されています。基本的な使い方は&yen;edefとほぼ同じです。</p>
+<p>\edefの欠点として、&yen;verbを使うことが出来ないことがあります。これは、\edefの{～}が引数であり、{}の中身がトークンとして先に読み込まれてしまい、\verbを実行できない為です。この欠点を補う為に、\tdefを定義しておきました。</p>
+<p>\tdefにおいて、{～}は<span style="color:red;"> 引数ではありません</span>。\tdefにおける引数は\tdef#1となっています。#1は\nameの様なエスケープシーケンスです。\tdefが発行された後には必ず、一番最初に「{」が来なくてはなりません。なお、これは展開された結果一番最初に「{」があれば良く、以下の様に\hogeが展開され、\bgroupが展開された結果「{」が来るような場合は許可されます。このルールを破った場合は\tdefは定義を行いません。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">\def</span><span class="command-token">\hoge</span><span class="block-token">{</span><span class="command-token">\bgroup</span>&nbsp;<span class="keyword-token">\verb</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\tdef</span><span class="command-token">\hoge</span><span class="command-token">\hoge</span><span class="text-token">+\(^_^)\+</span><span class="block-token">}</span></span></li></ol></pre></code>
+<p>さらに、上の例では\tdefで\hogeの定義を書き換えていますが、実際に\tdefが定義を行うのは}の後であるため、\hogeの後の二つ目の\hogeは\bgroup \verbに展開されます。\hogeの実行例↓</p>
+<p>\(^_^)\</p>
+<p>また、\edef等と同じく、\globalを付加することが出来ます。</p>
+<p>なお、\edef同様、\noexpand,\unexpandedを使うことが出来ますが、\protected@tdefは定義されていません。理由は{～}が引数でないが故、\protectを限定的に再定義することが出来なかったからです。それでも\protectを使いたい場合は下のように自分で定義してください。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">\def</span><span class="command-token">\protect</span><span class="block-token">{</span><span class="command-token">\noexpand</span><span class="command-token">\protect</span><span class="command-token">\noexpand</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="comment-token">%&nbsp;ちなみに、以下の様にしても良いです。</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="comment-token">%&nbsp;\makeatletter&nbsp;\let\protect\@unexpandable@protect&nbsp;\makeatother</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\tdef</span><span class="command-token">\name</span><span class="block-token">{</span><span class="text-token">～～</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\let</span><span class="command-token">\protect</span><span class="command-token">\relax</span></span></li></ol></pre></code>
+</section>
+</section>
+<section class="sect" id="__section:024">
+<header>
+<h1><span class="secnumber">3-4章</span>リスト</h1>
+</header>
+<p>配列構造を扱う為にわざわざ,区切りの文字列で扱うとか、マジ意味わかんない。なんなの？苦行なの？マゾなの？私嫌よ。</p>
+<p>というわけで、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはリストが使えます。</p>
+<section class="ssect" id="__section:025">
+<header>
+<h1><span class="secnumber">3-4.1</span>リスト生成</h1>
+</header>
+<p>「\newlist リスト名」で生成します。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="command-token">\newlist</span>&nbsp;<span class="command-token">\listname</span></span></li></ol></pre></code>
+<p>の様に宣言すると、\listnameというリストを生成することが出来ます。</p>
+</section>
+<section class="ssect" id="__section:026">
+<header>
+<h1><span class="secnumber">3-4.2</span>追加関連（set push unshift）</h1>
+</header>
+<p>「\set リスト名 数字 追加する内容」でリストの数字番目の要素を設定します。</p>
+<p>「\push リスト名 追加する内容」でリストの最後に内容を追加します。</p>
+<p>「\unshift リスト名 追加する内容」でリストの最初に内容を追加します。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="command-token">\set</span><span class="command-token">\listname</span>&nbsp;<span class="text-token">5</span>&nbsp;<span class="block-token">{</span><span class="command-token">\Lamuriyan</span><span class="text-token">です</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\push</span><span class="command-token">\listname</span><span class="block-token">{</span><span class="command-token">\Lamuriyan</span><span class="text-token">です</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\unshift</span><span class="command-token">\listname</span><span class="block-token">{</span><span class="command-token">\Lamuriyan</span><span class="text-token">です</span><span class="block-token">}</span></span></li></ol></pre></code>
+</section>
+<section class="ssect" id="__section:027">
+<header>
+<h1><span class="secnumber">3-4.3</span>取得関連（get pop shift）</h1>
+</header>
+<p>「\get リスト名 数字」でリストの数字番目の要素を取得します。</p>
+<p>「\pop リスト名」でリストの最後の要素を取得し、削除します。</p>
+<p>「\shift リスト名」でリストの最初の要素を取得し、削除します。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="command-token">\get</span>&nbsp;<span class="command-token">\listname</span>&nbsp;<span class="text-token">5</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\pop</span><span class="command-token">\listname</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\shift</span><span class="command-token">\listname</span></span></li></ol></pre></code>
+</section>
+<section class="ssect" id="__section:028">
+<header>
+<h1><span class="secnumber">3-4.4</span>長さ</h1>
+</header>
+<p>「\length リスト名」でリストの長さを返します。リストでない場合は-1が返ります。</p>
+</section>
+<section class="ssect" id="__section:029">
+<header>
+<h1><span class="secnumber">3-4.5</span>リストが空かどうか</h1>
+</header>
+<p>「\ifemptylist リスト名 空の場合 \else 空で無いの場合 \fi」というif構文が使えます。</p>
+</section>
+<section class="ssect" id="__section:030">
+<header>
+<h1><span class="secnumber">3-4.6</span>各要素に対して処理をする</h1>
+</header>
+<p>foreach構文を用意しています。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="command-token">\@foreach</span>&nbsp;<span class="command-token">\@memory</span><span class="text-token">:=</span><span class="command-token">\listname</span><span class="command-token">\do</span><span class="block-token">{</span><span class="text-token">&quot;</span><span class="command-token">\@memory</span><span class="text-token">&quot;</span><span class="block-token">}</span></span></li></ol></pre></code>
+<p>と書くと、\listnameの内容をすべて&quot;&quot;で囲って出力します。</p>
+<p>例として、次のコードをL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanソースに書いてみます。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="block-token">{</span><span class="comment-token">%makeatletterや\testlistの有効範囲を限定しておく為</span></span></li><li class="evenline"><span class="linecontainer"><span class="keyword-token">\makeatletter</span>&nbsp;<span class="comment-token">%&nbsp;&nbsp;@をマクロ名として認識する為です</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\newlist</span><span class="command-token">\testlist</span>&nbsp;<span class="comment-token">%&nbsp;\testlistの作成</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\push</span><span class="command-token">\testlist</span><span class="block-token">{</span><span class="text-token">りんご</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\push</span><span class="command-token">\testlist</span><span class="block-token">{</span><span class="text-token">ごりら</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\push</span><span class="command-token">\testlist</span><span class="block-token">{</span><span class="text-token">らいお</span><span class="command-token">\textcolor</span><span class="block-token">{</span><span class="text-token">red</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">ん</span><span class="block-token">}</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="text-token">出力結果「</span><span class="command-token">\@foreach</span>&nbsp;<span class="command-token">\@memory</span><span class="text-token">:=</span><span class="command-token">\testlist</span><span class="command-token">\do</span><span class="block-token">{</span><span class="text-token">&quot;</span><span class="command-token">\@memory</span><span class="text-token">&quot;</span><span class="block-token">}</span><span class="text-token">」</span></span></li><li class="evenline"><span class="linecontainer"><span class="block-token">}</span></span></li></ol></pre></code>
+<p>出力結果「&quot;りんご&quot;&quot;ごりら&quot;&quot;らいお<span style="color:red;">ん</span>&quot;」</p>
+</section>
+</section>
+<section class="sect" id="__section:031">
+<header>
+<h1><span class="secnumber">3-5章</span>今後の予定</h1>
+</header>
+<p>なんだかんだいっても、やっぱ複雑なT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xマクロ書くの面倒くさいにゃ！というわけで、マクロの内容をGroovyでかける\directgroovyを作ろうかと思ってるんだけど、どういう風に定義し、実行するのかfixしてないので絶賛放置中。</p>
+</section>
+
+
+</div>
+</body></html>

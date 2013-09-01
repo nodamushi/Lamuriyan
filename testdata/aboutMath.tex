@@ -1,0 +1,246 @@
+\chapter{数式}
+\TeXで文章を書く最大のメリットは数式を簡単に書けるということでしょう。\nTeXでは数式をMathMLに変換して出力します。
+
+ブラウザでMathMLを表示するには以下のどちらかを利用してください。
++MathML対応ブラウザで表示
++MathJax利用する
+
+現在ではMathMLへのブラウザの対応状況は悪く、MathJaxを利用するのが無難かと思われます。
+
+
+\chapternav
+
+\section{数式の書き方}
+
+\nTeXでは数式は\verb+$数式$,$$数式$$,\[数式\]+,eqnarray環境,eqnarray*環境を用いることで書くことが出来ます。
+
+\subsection{\$数式\$形式}
+\varb+$数式$+は「$x=y$」の様にインライン形式として出力されます。ここでは大型演算子$\sum$などは$\sum_0^1$の様になります。
+
+インラインとブロック形式のHTMLの違いとしては、<math>にdisplay="block"属性が付くか付かないかの違いしかありませんが。
+
+\subsection{\$\$数式\$\$形式}
+\verb+$$数式$$+はブロック形式の数式として出力されます。$$x+y$$の様になります。
+\verb+\[と\]は+\nTeXではどちらも\verb+$$に置換されるだけなので、実際には\[数式\[の様に書いても数式と判断されます。これ豆な(-_-)+
+
+ここでは$\sum$などの大型演算子は$$\sum_0^1$$の様に上下につきます。
+
+\subsection{eqnarray環境}
+\TeXと同じように、数式に番号を付けることが出来、数式の位置揃えが出来る環境です。
+
+\begin{code}{tex}
+\begin{eqnarray}
+  \label{eq:微分の定義}
+  \frac{df(x)}{dx} &=&\lim_{\delta x\to0}\frac{f(x+\delta x)-f(x)}{\delta x}\\
+  \label{eq:偏微分の定義}
+  \frac{\partial f(x,y,z...)}{\partial x}&=&
+  \lim_{\delta x\to0}\frac{f(x+\delta x,y,z,...)-f(x,y,z,...)}{\delta x}
+\end{eqnarray}
+\end{code}
+\begin{eqnarray}
+  \label{eq:微分の定義}
+  \frac{df(x)}{dx} &=&\lim_{\delta x\to0}\frac{f(x+\delta x)-f(x)}{\delta x}\\
+  \label{eq:偏微分の定義}
+  \frac{\partial f(x,y,z...)}{\partial x}&=&
+  \lim_{\delta x\to0}\frac{f(x+\delta x,y,z,...)-f(x,y,z,...)}{\delta x}
+\end{eqnarray}
+
+一つ目の要素は右寄せ、二つ目は中央寄せ、三つ目は左寄せになります。本家\TeXと違って、\nTeXの表はいくらでも拡張可能なので、三つ以上&があっても、問題なく表示されます。その際、位置揃えは（たぶん）中央寄せになります。
+
+デフォルトでは数式の番号は(チャプター番号:セクション番号-セクション内での式の番号)になります。チャプター番号とセクション番号が0の時はそれぞれ省略されます。これらの設定を変更したい場合は\verb+\theeqnumber+を書き換えてください。全部の行で式番号が要らない場合はeqnarray*環境を用いてください。
+
+\verb+\nonumber+を用いることで、その行の数式は書かれないようになります。
+\begin{eqnarray}
+  f(x)&=&x^{100}+x^{99}+x^{98}+x^{96}+..............\nonumber\\
+  &&...................+x^3+x^2+x+1
+\end{eqnarray}
+
+\section{array環境}
+行列などの表組の数式を書きたい場合に使います。\TeXと同様\verb+\begin{array}{crl}+の様に使います
+
+\begin{code}{tex}
+$$
+A = \left(
+  \begin{array}{ccc}
+    1 & 0 & 0\\
+    0 & 1 & 0\\
+    0 & 0& 1
+  \end{array}\right)
+$$
+\end{code}
+
+$$
+A = \left(
+  \begin{array}{ccc}
+    1 & 0 & 0\\
+    0 & 1 & 0\\
+    0 & 0& 1
+  \end{array}\right)
+$$
+
+\subsection{array環境における縦線横線について}
+
+\verb+\hlineや環境の引数の|+には現在対応していません。というのも、MathMLの仕様についてよく理解してないからです。（　＾ω＾）ｺﾞﾒﾝﾈ
+
+\section{MathJaxを使う問題点}
+
+\verb+\label+を宣言すると、該当ノードにIDを設定し\verb+\ref+ではそのIDにリンクを張る仕様になっていますが、MathJaxを使うと、数式中で定義したIDが消えてしまい、リンク先がなくなってしまう問題があります。
+
+通常の\verb+\ref+を用いて書くと、リンクが生成されてしまうので、\verb+\nolinkref+を用いるか、convsetting.hcvのconvert項目のRefLabelConverterのオプションにmlabeledtrを追加してください。\verb+\nolinkref+を用いるとこれ単体がリンクを使わない参照になります。後者のコンバーターの設定を用いると、\verb+\ref+を用いても、\verb+\ref+が付くノードの名前が引数に一致した場合は、リンクを使わない参照を作るようにします。デフォルトではこの設定が付いていますので、数式への参照はリンクが生成されません。MathJaxは使わないので、数式へのリンクが生成されて欲しい場合は、\\[1.5em]
+reflabel>nodamushi.ntex.html.RefLabelConverter:mlabeledtr,math\\[1.5em]
+という設定の後ろにある「mlabeledtr,math」を削除してください。
+
+\section{数式モードで使える実体参照}
+ひらく様の\a{http://www.hinet.mydns.jp/?TeX_mathml.rb}{ひらくの工房-TeX_mathml.rb}に載っている記号については、参考という名の丸コピいたしました。これ書いてるときにページ見てて気がついたのですが、別ページにまだいっぱい作ってない記号が載っていました。ぶっちゃけ、これ作った本人が$\sum \int \lim$ぐらいがあれば何も問題ないというゴミ屑なので、面倒くさいので放置です（　＾ω＾）
+
+\subsection{足りない実体参照を自作する}
+
+あの実体参照がないとか、人を馬鹿にしてんじゃねーぞ死ねnodamushi!!という事が多分にあるでしょう。その意見にはおおむね賛成ですが、何も貴方が犯罪者になる必要はありません。自分で定義しましょう。
+
+実体参照もマクロを使って定義しています。そのためのマクロが\verb+\mathescape+です。
+
+\verb+\mathescape#1#2,#3+という構文で、#1は登録するコマンドシーケンス名を、#2は実体参照の文字列を、「,」を挟んで#3は<mo><mi><mn><mtext>のどれでくくるかの指定をします。指定には以下の一文字を使います。
+
+\begin{tabular}{|C|l|}\hline
+  \th第三引数&\th 説明\\\hline
+  o,O&<mo>で囲みます。+や-や(などの演算子に付けます\\\hline
+  n,N&<mn>で囲みます。数値を表します\\\hline
+  t,T&<mtext>で囲みます。文字列を表します。\\\hline
+  i,I&<mi>で囲います。xとかyとか基本的に何でも<mi>には入るみたいです。\\\hline
+  a,A&<mi>で囲います。i,Iと違い、mathvariant=normalの属性がつきます。
+
+なんでa,Aかって？nodamushiの語学力のなさが原因だよ。何も思いつかなかったからアルファベットの最初でいいやってだけだよ(-_-)
+  \\\hline
+\end{tabular}
+
+大文字と小文字の違いは、大文字の場合$$\sum_0^10$$の様に上下に付くようになります。\\[5em]
+
+では、実際に定義をしてみましょう。実体参照には&と#の文字があって、そのままだと毎回\verb+\&,\#+と書かないといけません。これは面倒ですのでこれらのカテゴリコードを通常の文字列に変更してしまいましょう。他の範囲に影響を出さない為にグループで囲っておきます。
+
+\begin{code}{tex}
+\bgroup
+\catcode `\&=12
+\catcode `\#=12
+
+\global\mathescape\sum &sum;,O
+
+\egroup
+\end{code}
+
+
+
+\section{関数、演算子を定義する}
+
+\verb+\mathescape+でも定義できますが、一箇所使うだけだってのに、いちいち定義なんてしてらんない、って時には\verb+\operatorname+を使いましょう。これは\TeXと動作は一緒で、関数を定義するときに使います。
+\begin{code}{tex}
+\[
+{arg\,max}_{x\in X}\text{と}\operatorname*{arg\,max}_{x\in X}　sin^2\text{と}\operatorname{sin}^2
+\]
+\end{code}
+\[
+{arg\,max}_{x\in X}\text{と}\operatorname*{arg\,max}_{x\in X}　sin^2\text{と}\operatorname{sin}^2
+\]
+
+演算子の場合は\verb+\mathbin,\mathop+が使えます。
+
+\section{マクロに関して}
+\verb+\over,\under,\frac,\sqrt,\text+など、基本的な物は最初から実装してあります。
+
+\subsection{$\sideset{_n}{_m}P$とかの前後に付く記号を書きたい}
+\verb+\sideset+を使うことが出来ます。
+\begin{code}{tex}
+\[
+\sideset{_n}{_m}{P}
+\]
+\end{code}
+\[
+\sideset{_n}{_m}{P}
+\]
+
+
+\subsection{<mmultiscripts>を書きたい}
+\verb+\multiscripts+を使うことが出来ます。このマクロは
+\begin{verbatim}
+#4  #5
+  #1
+#2  #3
+\end{verbatim}
+の様な配置になります。何も表記したくない場所は\verb+\noneNode+と記入してください。
+\begin{code}{tex}
+\[
+\multiscripts{M}\alpha\noneNode{\beta+1}\omega
+\]
+\end{code}
+\[
+\multiscripts{M}\alpha\noneNode{\beta+1}\omega
+\]
+
+\subsection{<menclose>の角丸や円を書きたい}
+\verb+\roundedbox,\circle+が使えます。書式は\verb+\roundedbox[#1]#2+です。第一引数は<menclose>の属性を,区切りで並べます。（id=rbox,class=rboxclassの様に）。第二引数は<menclose>の中身です。
+\begin{code}{tex}
+\[
+\roundedbox{x} \circle{y}
+\]
+\end{code}
+\[
+\roundedbox{x} \circle{y}
+\]
+
+
+\subsection{数式に打ち消し線を書きたい}
+\verb+\cancel+が使えます。書式は\verb+\cancel[#1]#2+です。第一引数はu,v,h,dのうちいずれか一文字を選択してください。省略した場合はuになります。実装は<menclose>の～strikeを使っています。第一引数も、これの一文字目です。
+
+\begin{code}{tex}
+\[
+  \frac{1}{\cancel{(a+b)}}\frac{\cancel[d]{(a+b)}}{\cancel[h]{x}}\cancel[v]{x}
+\]
+\end{code}
+\[
+  \frac{1}{\cancel{(a+b)}}\frac{\cancel[d]{(a+b)}}{\cancel[h]{x}}\cancel[v]{x}
+\]
+
+\subsection{ていうか、<menclose>書きたい}
+\verb+\enclose+が使えます。書式は\verb+\enclose[#1]#2#3+です。第一引数は<menclose>の属性を,区切りで並べます。第二引数は<menclose>のnotation属性を指定します。第三引数は<menclose>の中身です。
+\begin{code}{tex}
+\[
+\enclose{actuarial}{a^2+b^2}
+\]
+\end{code}
+\[
+\enclose{actuarial}{a^2+b^2}
+\]
+
+
+\section{自作マクロについて}
+ここに書いてない機能については、自作マクロを作成するしかありません。
+
+数式モードでマクロは基本的には\verb+\boxと\mfragと\setAttr,\setAttrs+を駆使してDOMを生成していくことで作ります。
+
+これらは\nTeXにおける他のマクロの作り方（今度書く）と同様ですが、いくつか特殊なルールがあります。
+
+\subsection{<mrow>で囲うべきか判断できない場合}
+\label{sec:mfrag}
+MathMLにおいて、<mrow>は様々な場面で使われる。例えば、<msup>などは二つの要素を持つが、中に数式を入れたい場合は\\[3em]
+<msup><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow> <mn>2</mn></msup>\\[3em]
+といった具合に<mrow>で囲う必要がある。しかし、後ろの<mn>2</mn>は要素が一つしかないので、<mrow>で囲う必要性はない。むろん、囲っても構わないのだが、\textbf{美しくない}。要素が一つなら<mrow>で囲わないのがジャスティスである。しかし、これからいくつの要素が入るかなんてマクロ実行段階で知る術はない。
+
+そこで、\nTeXでは数式モードにおいて特殊なタグ<mfrag>というタグを定義している。このタグは要素が一つしかない場合はDocumentFragmentとして働き、要素が二つ以上あるときは<mrow>になるというタグだ。\verb+\mfrag#1+マクロで<mfrag>を生成できる。後は#1の部分に中身を書けば良い。
+
+\subsection{スコープの為のグループは作らない}
+\nTeXでは数式モードにおいて、begingroupフックを利用している。グループの中身を\ref[,章]{sec:mfrag}にて説明した<mfrag>で囲う命令を発効する為である。こうしなければ、\verb|{x+1}^2|が<mi>x</mi><mo>+</mo><msup><mn>1</mn><mn>2</mn></msup>となってしまうからである。
+
+そこで、\nTeXでは\{でグループが作られるたびに（マクロの引数のグループは関係ない）設定したトークンをアウトプットするeverybegingroupというフックを用意し、これを解決した。しかし、これが逆にマクロを作る上で問題となることがある。
+
+例えば、引数をそのまま\{#1\}と書き出した場合、この\{に反応して\mfragが生成される。それは意図した挙動でないことが多いだろう。したがって、数式モードで使うマクロでは\{\}を用いてグループを作らないことが賢明である。
+
+それでもグループが必要な場合には、\verb+\bgroup,\egroup+のペアを用いる。数式モードでは\verb+\bgroup,\egroup+はeverybegingroupのフックが呼び出されない。
+
+\subsection{ある範囲を一つの<mo><mi><mn><mtext>にしたい}
+\nTeXは数式モードにおいて、\verb+\@startchargroup+コマンドが発行されてから、\verb+\@endchargroup+が現れるまでの間を一つの<mo><mi><mn><mtext>と認識します。\verb+\@startchargroup+の引数は「o,i,n,t」のいずれか一文字です。それぞれ、<mo><mi><mn><mtext>に対応しています。\verb+\mathopや\operator+などはこれを利用しています。
+
+\subsection{^_を上下につけるか横に付けるかを変更する}
+あるノードに対して^_の位置はそのノードに対して\verb+\@underoverflag+が呼ばれているかどうかで決まる。
+\begin{code}{tex}
+\box{nodename}{\@underoverflag 内容}
+\end{code}
+の様に書くとこの<nodename>は上下に^_が付く。

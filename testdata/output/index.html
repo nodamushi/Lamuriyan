@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html><head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+
+<title>
+Lamuriyan仮本部
+</title>
+
+<meta content="noarchive,noindex,nofollow" name="robots">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" type="text/javascript">
+ </script>
+<link href="ntex.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div id="mainbody">
+<header id="pagetitle">
+<h1>
+Lamuriyan仮本部
+</h1>
+</header>
+
+
+
+<section class="abstract" id="__section:001">
+<header>
+<h1>概要</h1>
+</header>
+<p>ここは、とりあえず生成したHTMLファイルを置く場所がなかったので忍者ツールズの一時的なアカウントで作ったページです。全く、こういうときはてなダイアリーは困るね(-_-)　そのうち、私のHPをつくったらそちらに移動させます。<br>
+<span class="vspace" style="line-height:2em">&nbsp;</span><br>
+</p>
+<p>さて、本ページはL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanのデモページです。</p>
+<p>自分のHPやブログの記事をT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xで管理したいな、と思ったことはありませんか？T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xだったら数式を簡単にかけるのにな。T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xだったら図1とかの番号を特に考えなくても勝手に管理してくれるのにな。でも、今あるT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>XからHTMLを生成するツールで、思いのままにスタイリッシュなサイトを生成するのは力不足感が否めない。たとえば、\refでページ内リンクを張りつつ、chapter単位で別ページに切り出したい、という場合、生成されたHTMLを元手に分離作業をするのでは修正が大変ですね。HTMLになるまえのDOMオブジェクトの状態で結果を出力して欲しい。そういうnodamushiの要望に応える為にL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanは作られました。</p>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanとは、T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xライクな文法で、ファイル変換するとHTMLのDOMを生成するJavaで作成されたプログラムです。GitHubで公開しています。<a href="https://github.com/nodamushi/nTeXforHTML">
+ nodamushi / nTeXforHTML</a>
+<br>
+<span class="vspace" style="line-height:3em">&nbsp;</span><br>
+</p>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xライクな文法なので、当然マクロが使えます。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">\def</span><span class="command-token">\foolish</span>&nbsp;<span class="tokentype25">#1</span><span class="text-token">様は超絶かっこいい</span><span class="block-token">{</span><span class="tokentype25">#1</span><span class="text-token">は悲しいほど馬鹿</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\foolish</span>&nbsp;<span class="text-token">nodamushi様は超絶かっこいい</span></span></li></ol></pre></code>
+<p>これを実際にL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanソースに書くと↓の様になります</p>
+<p>nodamushiは悲しいほど馬鹿<br>
+<span class="vspace" style="line-height:2em">&nbsp;</span><br>
+</p>
+<p>そして、もちろん数式も使えます。</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mtable columnalign="right center left">
+<mlabeledtr id="__label:001">
+<mtd>
+<mtext>(1)</mtext></mtd>
+<mtd>
+<mi>&#948;</mi><mo>(</mo><mi>x</mi><mo>)</mo></mtd>
+<mtd>
+<mo>=</mo></mtd>
+<mtd>
+<mfenced close="">
+<mtable columnalign="center left">
+<mtr>
+<mtd>
+<mn>&infin;</mn></mtd>
+<mtd>
+<mo>(</mo><mtext>if</mtext><mspace width="1ex"></mspace>
+<mi>x</mi><mo>=</mo><mn>0</mn><mo>)</mo></mtd>
+</mtr>
+<mtr>
+<mtd>
+<mn>0</mn></mtd>
+<mtd>
+<mo>(</mo><mtext>if</mtext><mspace width="1ex"></mspace>
+<mi>x</mi><mo>&ne;</mo><mn>0</mn><mo>)</mo></mtd>
+</mtr>
+</mtable>
+</mfenced>
+</mtd>
+</mlabeledtr>
+<mlabeledtr>
+<mtd>
+<mtext>(2)</mtext></mtd>
+<mtd>
+<mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mtd>
+<mtd>
+<mo>=</mo></mtd>
+<mtd>
+<mfrac>
+<mn>1</mn><msqrt>
+<mrow>
+<mn>2</mn><mi>&#960;</mi><msup>
+<mi>&#963;</mi><mn>2</mn></msup>
+</mrow>
+</msqrt>
+</mfrac>
+<munderover>
+<mo>&sum;</mo><mrow>
+<mi>i</mi><mo>=</mo><mn>0</mn></mrow>
+<mn>10</mn></munderover>
+<msub>
+<mi>a</mi><mi>i</mi></msub>
+<msubsup>
+<mo>&int;</mo><mn>0</mn><mi>x</mi></msubsup>
+<mi>exp</mi><mfenced close=")">
+<mrow>
+<mo>-</mo><mfrac>
+<mrow>
+<mo>(</mo><mi>t</mi><mo>-</mo><mi>&#956;</mi><msup>
+<mo>)</mo><mn>2</mn></msup>
+</mrow>
+<mrow>
+<mn>2</mn><msup>
+<mi>&#963;</mi><mn>2</mn></msup>
+</mrow>
+</mfrac>
+</mrow>
+</mfenced>
+<mi>d</mi><mi>t</mi></mtd>
+</mlabeledtr>
+</mtable>
+</math>
+<p><br>
+<span class="vspace" style="line-height:2em">&nbsp;</span><br>
+</p>
+<p>ソースコードを以下の様にシンタックスハイライトすることが出来たりします。（現状Java,JavaScript,CoffeeScript,HTML,T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xに対応。私が使う文にはこれだけで十分なので…）</p>
+<code class="nhlight nhlight-javascript">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">function</span>&nbsp;<span class="plain-token">Person</span><span class="parenthesis-token">(</span><span class="plain-token">name</span><span class="parenthesis-token">)</span><span class="block-token">{</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="keyword-token">this</span><span class="access-token">.</span><span class="plain-token">name</span><span class="operator-token">=</span><span class="plain-token">name</span><span class="eos-token">;</span></span></li><li class="oddline"><span class="linecontainer"><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer"><span class="plain-token">Person</span><span class="access-token">.</span><span class="keyword-token">prototype</span><span class="access-token">.</span><span class="plain-token">getName</span><span class="operator-token">=</span><span class="define-token">function</span><span class="parenthesis-token">(</span><span class="parenthesis-token">)</span><span class="block-token">{</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="return-token">return</span>&nbsp;<span class="keyword-token">this</span><span class="access-token">.</span><span class="plain-token">name</span><span class="eos-token">;</span></span></li><li class="evenline"><span class="linecontainer"><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="define-token">var</span>&nbsp;<span class="plain-token">p</span>&nbsp;<span class="operator-token">=</span>&nbsp;<span class="keyword-token">new</span>&nbsp;<span class="plain-token">Person</span><span class="parenthesis-token">(</span><span class="string-token">&quot;nodamushi&quot;</span><span class="parenthesis-token">)</span><span class="eos-token">;</span></span></li></ol></pre></code>
+<p>あなたも、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanを用いてページを生成してみませんか？</p>
+</section>
+<nav>
+<header>
+<h1>目次</h1>
+</header>
+<ul>
+<li>
+<a class="ref" href="index_chapter1.html">
+<span class="itemnumber">1</span><span class="itemtitle">Lamuriyanについて</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter1.html#__section:003">
+<span class="itemnumber">1-1</span><span class="itemtitle">作り始めた動機</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter1.html#__section:004">
+<span class="itemnumber">1-2</span><span class="itemtitle">L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの方針</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter1.html#__section:005">
+<span class="itemnumber">1-3</span><span class="itemtitle">L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの由来</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html">
+<span class="itemnumber">2</span><span class="itemtitle">文章を書く</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter2.html#__section:007">
+<span class="itemnumber">2-1</span><span class="itemtitle">改行をする</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:008">
+<span class="itemnumber">2-2</span><span class="itemtitle">段落を生成する</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:009">
+<span class="itemnumber">2-3</span><span class="itemtitle">フォントの大きさを変える</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter2.html#__section:010">
+<span class="itemnumber">2-3.1</span><span class="itemtitle">フォントサイズを追加する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:011">
+<span class="itemnumber">2-4</span><span class="itemtitle">フォントファミリを変更する</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter2.html#__section:012">
+<span class="itemnumber">2-4.1</span><span class="itemtitle">フォントファミリを追加する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:013">
+<span class="itemnumber">2-5</span><span class="itemtitle">太文字にする</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:014">
+<span class="itemnumber">2-6</span><span class="itemtitle">斜体にする</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:015">
+<span class="itemnumber">2-7</span><span class="itemtitle">スモールキャップ体にする</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:016">
+<span class="itemnumber">2-8</span><span class="itemtitle">文字の色を設定する</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter2.html#__section:017">
+<span class="itemnumber">2-9</span><span class="itemtitle">文字に関するClassのまとめ</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html">
+<span class="itemnumber">3</span><span class="itemtitle">マクロ</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter3.html#__section:019">
+<span class="itemnumber">3-1</span><span class="itemtitle">マクロ呼び出し</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:020">
+<span class="itemnumber">3-2</span><span class="itemtitle">マクロを定義する</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:021">
+<span class="itemnumber">3-3</span><span class="itemtitle">展開したトークンを保持する</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter3.html#__section:022">
+<span class="itemnumber">3-3.1</span><span class="itemtitle">\edefや\protected@edefについて</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:023">
+<span class="itemnumber">3-3.2</span><span class="itemtitle">\tdefについて</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:024">
+<span class="itemnumber">3-4</span><span class="itemtitle">リスト</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter3.html#__section:025">
+<span class="itemnumber">3-4.1</span><span class="itemtitle">リスト生成</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:026">
+<span class="itemnumber">3-4.2</span><span class="itemtitle">追加関連（set push unshift）</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:027">
+<span class="itemnumber">3-4.3</span><span class="itemtitle">取得関連（get pop shift）</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:028">
+<span class="itemnumber">3-4.4</span><span class="itemtitle">長さ</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:029">
+<span class="itemnumber">3-4.5</span><span class="itemtitle">リストが空かどうか</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:030">
+<span class="itemnumber">3-4.6</span><span class="itemtitle">各要素に対して処理をする</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter3.html#__section:031">
+<span class="itemnumber">3-5</span><span class="itemtitle">今後の予定</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html">
+<span class="itemnumber">4</span><span class="itemtitle">数式</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:033">
+<span class="itemnumber">4-1</span><span class="itemtitle">数式の書き方</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:034">
+<span class="itemnumber">4-1.1</span><span class="itemtitle">$数式$形式</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:035">
+<span class="itemnumber">4-1.2</span><span class="itemtitle">$$数式$$形式</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:036">
+<span class="itemnumber">4-1.3</span><span class="itemtitle">eqnarray環境</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:037">
+<span class="itemnumber">4-2</span><span class="itemtitle">array環境</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:038">
+<span class="itemnumber">4-2.1</span><span class="itemtitle">array環境における縦線横線について</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:039">
+<span class="itemnumber">4-3</span><span class="itemtitle">MathJaxを使う問題点</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:040">
+<span class="itemnumber">4-4</span><span class="itemtitle">数式モードで使える実体参照</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:041">
+<span class="itemnumber">4-4.1</span><span class="itemtitle">足りない実体参照を自作する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:042">
+<span class="itemnumber">4-5</span><span class="itemtitle">関数、演算子を定義する</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:043">
+<span class="itemnumber">4-6</span><span class="itemtitle">マクロに関して</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:044">
+<span class="itemnumber">4-6.1</span><span class="itemtitle"><math xmlns="http://www.w3.org/1998/Math/MathML">
+<mmultiscripts>
+<mi>P</mi><mi>m</mi><none></none>
+<mprescripts></mprescripts>
+<mi>n</mi><none></none>
+</mmultiscripts>
+</math>
+とかの前後に付く記号を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:045">
+<span class="itemnumber">4-6.2</span><span class="itemtitle">&lt;mmultiscripts&gt;を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:046">
+<span class="itemnumber">4-6.3</span><span class="itemtitle">&lt;menclose&gt;の角丸や円を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:047">
+<span class="itemnumber">4-6.4</span><span class="itemtitle">数式に打ち消し線を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:048">
+<span class="itemnumber">4-6.5</span><span class="itemtitle">ていうか、&lt;menclose&gt;書きたい</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:049">
+<span class="itemnumber">4-7</span><span class="itemtitle">自作マクロについて</span></a>
+<ul>
+<li>
+<a class="ref" href="index_chapter4.html#__section:050">
+<span class="itemnumber">4-7.1</span><span class="itemtitle">&lt;mrow&gt;で囲うべきか判断できない場合</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:051">
+<span class="itemnumber">4-7.2</span><span class="itemtitle">スコープの為のグループは作らない</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:052">
+<span class="itemnumber">4-7.3</span><span class="itemtitle">ある範囲を一つの&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;にしたい</span></a>
+</li>
+<li>
+<a class="ref" href="index_chapter4.html#__section:053">
+<span class="itemnumber">4-7.4</span><span class="itemtitle">^_を上下につけるか横に付けるかを変更する</span></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+
+
+</div>
+</body></html>

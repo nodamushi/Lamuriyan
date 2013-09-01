@@ -1,0 +1,133 @@
+\chapter{マクロ}
+\Lamuriyanは当然マクロが使えます。が、nodamushiが\TeXの知識が曖昧すぎる為、動けば良いじゃんの精神にしたがってかなりテキトーな実装になっています。実際の\TeXはこうだよ、こういう動作にした方が良いよと言うことがありましたら、遠慮無く@nodamushiにリプを送って下さい。参考にします。参考にするだけで、実装するかは分かりません。
+
+\chapternav
+
+\section{マクロ呼び出し}
+通常のマクロ呼び出しと同じように呼び出すのですが、LaTeX書いてて常々思うんですが、{\color{cred}\bfマクロ名に日本語使うことなくね？}私、マクロ名書いた後に日本語が来ると、半角／全角キーを押すことに集中してしまうが為、スペースキーを押すことを忘れ、エラーをよく出してます。むかつきます。
+
+なので、\LamuriyanはCharCategoryのアルファベットは、a-z,A-Zのみを登録しています。日本語は使えません。よって「\verb+\LamuriyanはCharCategory…+」の様にマクロ名の後にスペース無く日本語を入力しても問題ありません。もちろん、マクロ名の後のスペースは無視されるので、書いても問題ありません。
+
+
+\section{マクロを定義する}
+\verb+\defと\newcommand+を定義しています。使い方は大体本家\TeXやLaTeXと同じだと思います。パラグラフの扱いがどうのこうのとかいうのをどっかで読んだんですが、正直よーわからんので、無視してます。改行どこまでも続いてもオーケー。
+
+\section{展開したトークンを保持する}
+\tdef\vb{\verb+\edefや\protected@edefについて+}
+\subsection{\vb}
+いわゆる\verb+\edef+に関しては、\verb+\edefと\protedted@edef+が定義されています。たぶん、どちらも大体LaTeXと同じ挙動を示すんじゃないかなーと思っています。
+
+注意して貰いたい事は、\verb+\edef,\protedted@edef+はトークンを保持するだけであり、DOM（TeXで言えばBoxにあたるものか）を保持することは出来ません。\verb+\edef,\protected@edef+内部でDOMを作成した場合、環境に挿入されます。\verb+\Lamuriyan+(=\Lamuriyan)などはDOMを生成するコマンドなので、うっかり混ぜてしまうことがないよう注意してください。
+
+\tdef\vb{\verb+\tdefについて+}
+\subsection{\vb}
+\Lamuriyanには\verb+\tdef+という特殊なトークンを展開し、保持するマクロが定義されています。基本的な使い方は\yen edefとほぼ同じです。
+
+\verb+\edef+の欠点として、\yen verbを使うことが出来ないことがあります。これは、\verb+\edefの{～}が引数であり、{}の中身がトークンとして先に読み込まれてしまい、\verbを実行できない為です。この欠点を補う為に、\tdefを定義しておきました。+
+
+\verb+\tdefにおいて、{～}は+{\color{red} 引数ではありません}。\verb+\tdefにおける引数は\tdef#1となっています。#1は\nameの様なエスケープシーケンスです。\tdefが発行された後には必ず、一番最初に「{」が来なくてはなりません。なお、これは展開された結果一番最初に「{」があれば良く、以下の様に\hogeが展開され、\bgroupが展開された結果「{」が来るような場合は許可されます。このルールを破った場合は\tdefは定義を行いません。+
+
+\begin{code}{tex}
+\def\hoge{\bgroup \verb}
+\tdef\hoge\hoge+\(^_^)\+}
+\end{code}
+
+さらに、上の例では\verb+\tdefで\hogeの定義を書き換えていますが、実際に\tdefが定義を行うのは}の後であるため、\hogeの後の二つ目の\hogeは\bgroup \verbに展開されます。\hogeの実行例↓+
+
+{
+\def\hoge{\bgroup \verb}
+\tdef\hoge\hoge+\(^_^)\+}
+\hoge
+}
+
+また、\verb+\edef+等と同じく、\verb+\globalを付加することが出来ます。+
+
+なお、\verb+\edef同様、\noexpand,\unexpandedを使うことが出来ますが、\protected@tdefは定義されていません。理由は{～}が引数でないが故、\protectを限定的に再定義することが出来なかったからです。それでも\protectを使いたい場合は下のように自分で定義してください。+
+\begin{code}{tex}
+\def\protect{\noexpand\protect\noexpand}
+  % ちなみに、以下の様にしても良いです。
+  % \makeatletter \let\protect\@unexpandable@protect \makeatother
+\tdef\name{～～}
+\let\protect\relax
+\end{code}
+\section{リスト}
+配列構造を扱う為にわざわざ,区切りの文字列で扱うとか、マジ意味わかんない。なんなの？苦行なの？マゾなの？私嫌よ。
+
+というわけで、\Lamuriyanはリストが使えます。
+
+\subsection{リスト生成}
+「\verb+\newlist リスト名+」で生成します。
+
+\begin{code}{tex}
+  \newlist \listname
+\end{code}
+の様に宣言すると、\verb+\listname+というリストを生成することが出来ます。
+
+
+\subsection{追加関連（set push unshift）}
+「\verb+\set リスト名 数字 追加する内容+」でリストの数字番目の要素を設定します。
+
+「\verb+\push リスト名 追加する内容+」でリストの最後に内容を追加します。
+
+「\verb+\unshift リスト名 追加する内容+」でリストの最初に内容を追加します。
+
+\begin{code}{tex}
+\set\listname 5 {\Lamuriyanです}
+\push\listname{\Lamuriyanです}
+\unshift\listname{\Lamuriyanです}
+\end{code}
+
+
+\subsection{取得関連（get pop shift）}
+「\verb+\get リスト名 数字+」でリストの数字番目の要素を取得します。
+
+「\verb+\pop リスト名+」でリストの最後の要素を取得し、削除します。
+
+「\verb+\shift リスト名+」でリストの最初の要素を取得し、削除します。
+
+
+\begin{code}{tex}
+\get \listname 5
+\pop\listname
+\shift\listname
+\end{code}
+
+
+
+
+\subsection{長さ}
+「\verb+\length リスト名+」でリストの長さを返します。リストでない場合は-1が返ります。
+
+\subsection{リストが空かどうか}
+「\verb+\ifemptylist リスト名 空の場合 \else 空で無いの場合 \fi+」というif構文が使えます。
+
+
+\subsection{各要素に対して処理をする}
+foreach構文を用意しています。
+\begin{code}{tex}
+\@foreach \@memory:=\listname\do{"\@memory"}
+\end{code}
+と書くと、\verb+\listnameの内容をすべて""で囲って出力します。+
+
+例として、次のコードを\Lamuriyanソースに書いてみます。
+\begin{code}{tex}
+{%makeatletterや\testlistの有効範囲を限定しておく為
+\makeatletter %  @をマクロ名として認識する為です
+\newlist\testlist % \testlistの作成
+\push\testlist{りんご}
+\push\testlist{ごりら}
+\push\testlist{らいお\textcolor{red}{ん}}
+出力結果「\@foreach \@memory:=\testlist\do{"\@memory"}」
+}
+\end{code}
+{
+\makeatletter
+\newlist\testlist
+\push\testlist{りんご}
+\push\testlist{ごりら}
+\push\testlist{らいお\textcolor{red}{ん}}
+出力結果「\@foreach \@memory:=\testlist\do{"\@memory"}」
+}
+\section{今後の予定}
+なんだかんだいっても、やっぱ複雑な\TeXマクロ書くの面倒くさいにゃ！というわけで、マクロの内容をGroovyでかける\verb+\directgroovy+を作ろうかと思ってるんだけど、どういう風に定義し、実行するのかfixしてないので絶賛放置中。
+

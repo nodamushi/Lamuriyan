@@ -1,0 +1,87 @@
+\newenvironment{document}{\tagname{contents}\setAttr{id}{document}}{}
+\newenvironment{head}{\tagname{headcontent}\disableparagraph}{}
+\let\nTeX\Lamuriyan
+
+\newcommand{\cred}{*f65}
+
+
+\begin{head}
+%  \charset{utf-8}
+%  \box{title}{Lamuriyan仮本部}
+  \box{meta}{\setAttr{content}{noarchive,noindex,nofollow}\setAttr{name}{robots}}
+  \js{http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML}
+  \css{ntex.css}
+
+\end{head}
+
+\setgprop{title}{Lamuriyan仮本部}
+
+\begin{document}
+%\begin{div}
+%\setAttr{id}{mainbody}
+\begin{abstract}
+  \label{abstract}
+  
+    ここは、とりあえず生成したHTMLファイルを置く場所がなかったので忍者ツールズの一時的なアカウントで作ったページです。全く、こういうときはてなダイアリーは困るね(-_-)　そのうち、私のHPをつくったらそちらに移動させます。\\[2em]
+
+
+
+
+  さて、本ページは\nTeXのデモページです。
+
+  自分のHPやブログの記事を\TeXで管理したいな、と思ったことはありませんか？\TeXだったら数式を簡単にかけるのにな。\TeXだったら図1とかの番号を特に考えなくても勝手に管理してくれるのにな。でも、今ある\TeXからHTMLを生成するツールで、思いのままにスタイリッシュなサイトを生成するのは力不足感が否めない。たとえば、\verb+\ref+でページ内リンクを張りつつ、chapter単位で別ページに切り出したい、という場合、生成されたHTMLを元手に分離作業をするのでは修正が大変ですね。HTMLになるまえのDOMオブジェクトの状態で結果を出力して欲しい。そういうnodamushiの要望に応える為に\Lamuriyanは作られました。
+
+  \nTeXとは、\TeXライクな文法で、ファイル変換するとHTMLのDOMを生成するJavaで作成されたプログラムです。GitHubで公開しています。\alink{https://github.com/nodamushi/nTeXforHTML}{ nodamushi / nTeXforHTML}\\[3em]
+
+  \nTeXは\TeXライクな文法なので、当然マクロが使えます。
+
+\begin{code}{tex}
+\def\foolish #1様は超絶かっこいい{#1は悲しいほど馬鹿}
+\foolish nodamushi様は超絶かっこいい
+\end{code}
+これを実際に\nTeXソースに書くと↓の様になります
+
+\def\foolish #1様は超絶かっこいい{#1は悲しいほど馬鹿}
+\foolish nodamushi様は超絶かっこいい\\[2em]
+
+そして、もちろん数式も使えます。
+  \begin{eqnarray}
+    \label{eq:eq1}
+  \delta(x)&=&\left\{\begin{array}{cl}
+      \infty & (\text{if } x=0)\\
+      0 & (\text{if } x\neq 0)
+    \end{array}\right.\\
+  f(x)&=&\frac{1}{\sqrt{2\pi\sigma^2}}\sum_{i=0}^{10}a_i \int_0^x\exp\left(-\frac{(t-\mu)^2}{2\sigma^2}\right)dt
+\end{eqnarray}
+
+\\[2em]
+
+ソースコードを以下の様にシンタックスハイライトすることが出来たりします。（現状Java,JavaScript,CoffeeScript,HTML,\TeXに対応。私が使う文にはこれだけで十分なので…）
+\begin{code}{javascript}
+function Person(name){
+  this.name=name;
+}
+Person.prototype.getName=function(){
+  return this.name;
+}
+var p = new Person("nodamushi");
+\end{code}
+
+あなたも、\Lamuriyanを用いてページを生成してみませんか？
+
+\end{abstract}
+
+
+\documentnav[0-2]
+
+\input{aboutLamuriyan.tex}
+\input{aboutText.tex}
+\input{aboutMacro.tex}
+\input{aboutMath.tex}
+
+
+
+
+
+%\end{div}
+\end{document}

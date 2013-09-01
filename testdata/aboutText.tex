@@ -1,0 +1,122 @@
+\chapter{文章を書く}
+基本的な文法は\TeXに乗っ取っていますが、HTMLで表示する事を目的とした結果の違いがいくつかあります。
+
+\chapternav
+
+
+\section{改行をする}
+\TeXでは改行をしても、生成される出力結果は改行されません。\Lamuriyanもソースコードで改行しても、結果には反映されません。改行をするには{\color{red}\verb+\\+}を用います。実際に文章中で使うと\\
+このように改行されます。ただし、段落が生成されるわけではないので、行頭の字下げが起こっていないことが確認できるかと思います。{\color{green}（字下げは\Lamuriyanの機能では無く、CSSで指定しています。）}
+
+\verb+\\+は\verb+\\[3em]+の様に記述することで、改行後の行送りの幅を指定することが出来ます。\\[3em]
+こんなかんじにね。
+
+
+\section{段落を生成する}
+\Lamuriyanでは二回以上の改行があると新しい段落<p>を生成します。
+
+\begin{code}{tex}
+ここは第一段落です。
+一回の改行は段落も改行も生成しません。改行したいときは\\を用いてください。
+
+ここは第二段落です。
+\end{code}
+
+\vspace{2em}
+
+<p>を発行して欲しくないときには、{\color{red}\verb+\disableparagraph+}コマンドを使うと、それ以降の同じグループでは段落<p>が生成されなくなります。再度段落を作りたい場合は{\color{red}\verb+\enableparagraph+}を利用します。これらの設定は同一グループの中だけで有効です。現在、段落を生成するかどうかは、\verb+\useparagraph+コマンドで確認することが出来ます。この値がfなら段落は生成されず、tなら、段落が生成されます。なお、\verb+\useparagraph+の値を変更しても、段落を生成するかどうかのフラグは変化しないので、確認する以外には用いないでください。
+
+なお、段落と段落の間の空白を作りたいときは\verb+\vspace+を利用してください。
+
+
+
+\section{フォントの大きさを変える}
+フォントの大きさを変えるには、\verb+\tiny,\scriptsize,\footnotesize,\large,\Large,\LARGE,\huge\Huge+を用います。
+
+これらはそれぞれ<span class="～～size">を出力します。class名は以下を参考にして、実際のフォントサイズはCSSを用いて指定してください。
+
+-\verb+\tiny+:class=tinysize　　一般に50\%のサイズのフォントです。
+-\verb+\scriptsize+:class=scriptsize　　 一般に70\%のサイズのフォントです。
+-\verb+\footnotesize+:class=footnotesize　　一般に80\%のサイズのフォントです。
+-\verb+\large+:class=largesize　　一般に120\%のサイズのフォントです。
+-\verb+\Large+:class=xlargesize　　一般に140\%のサイズのフォントです。
+-\verb+\LARGE+:class=xxlargesize　　一般に170\%のサイズのフォントです。
+-\verb+\huge+:class=hugesize　　一般に210\%のサイズのフォントです。
+-\verb+\Huge+:class=xhugesize　　一般に250\%のサイズのフォントです。
+-\verb+\normalsize+:デフォルトフォントサイズです。
+
+\subsection{フォントサイズを追加する}
+\label{sec:addfontsize}
+上記だけでおよそ十分だと思いますが、よりフォントサイズを追加したい場合もあるかもしれません。
+
+\Lamuriyan処理系は\verb+\fontsize+というコマンドの値からフォントの大きさを定義する{\color{\cred}class名}を読み取っています。この値が{\color{\cred}"nomal"}である場合はフォントサイズの指定が無視されます。normalを無視するルールは後述する他のフォントプロパティでも同じです。と、いうことは\verb+\fontsize+の中身を新たなclass名で置き換えれば、新しいフォントサイズを追加することが可能です。
+
+例として、超巨大フォントという意味を込めて、\verb+\exHuge+を追加してみましょう。
+
+\begin{code}{tex}
+\newcommand{\exHuge}{\defstr\fontsize{exHugesize}}
+\end{code}
+
+{\color{red}\verb+\defstr+}は\Lamuriyanの処理系がコマンドの中身を文字列として読み取れるようにする為のコマンドです。\verb+\edef+の結果をString型として保持すると思ってください。このコマンドを使わないと\Lamuriyan処理系は内容を読み取ることが出来ません。
+
+\section{フォントファミリを変更する}
+フォントファミリを変更するには\verb+\mcfamily,\gtfamily,\rmfamily,\sffamily,\ttfamily+を使います。順に明朝体、ゴシック体、ローマン体、サンセリフ体、タイプライタ体をあらわあします。class名はコマンド名と全く同じです。
+
+引数部分だけフォントファミリを変更する\verb+\textmc,\textrm,\textsf,\texttt+等も定義してあります。
+
+\subsection{フォントファミリを追加する}
+\ref[,章]{sec:addfontsize}で述べたのと同様にフォントファミリも追加することが出来ます。フォントファミリのclass名を定義しているコマンドは\verb+\fontfamily+です。
+
+
+\section{太文字にする}
+\verb+\bf+を使います。class名は"boldweight"です。引数の部分を太文字にする\verb+\textbf+もあります。
+
+基本的にHTMLでは太文字にするか、普通の太さにするかしか使えないので太文字に関する新しい何かの追加をすることは無いと思いますが、これまで同様、\verb+\fontseries+の内容を変更することで太文字の定義を変えられます。
+
+\section{斜体にする}
+\verb+\itshape,\slshape+を使います。前者はイタリック体、後者は斜体を表します。日本語ではどっちも傾けるだけなので違いは無いらしいですが、英文では違いがあるそうです。\verb+\itshape+を指定するとclass名は"itstyle"が、\verb+\slshape+を指定するとclass名は"slstyle"になります。
+
+斜体に関して新しい定義をしたい場合はこれまでと同様、\verb+\fontshape+の内容を変更します。
+
+\section{スモールキャップ体にする}
+\verb+\scshape+を使います。class名はscvariantです。
+
+\TeXではスモールキャップ体もフォントシェイプの一部ですが、CSSでは別項目になので、それにそって\Lamuriyanでも別項目になっています。
+
+これまで同様、新たに追加したい場合は、\verb+fontvariant+の内容を変更します。
+
+\section{文字の色を設定する}
+\verb+\color+を使います。色に関してはclass名で指定するのでは無く、直接"style=color:色"を書き出します。引数部分だけ色を指定する\verb+\textcolor+もあります。
+
+色の指定にはいくつかの方法があります。
+
+-\verb+\color{\#ffffff},\color{*ffffff}+の様に色を書く方法。これはそのまま"color:\#ffffff"となります。\verb+\#+と書くのは面倒くさいので、*を代用することが出来ます。
+-\verb+\color{red}+の様に色の名前を書く方法。これもそのまま"color:red"となります。
+-\verb+\color{rgba(255,255,255,1)}+の様に書く方法。これもそのまま"color:rgba(255,255,255,1)"となります。
+-\verb+\color[\#rgb]{ffffff},\color[*rgb]{ffffff}+と書く方法。これは第二引数の内容に\#を付加して色の値にします。
+-\verb+\color[rgb]{255,255,255}+と書く方法。これはrgbの各値を,区切りで0～255の値で表現します。
+-\verb+\color[argb]{0.5,255,255,255},\color[argb]{127,255,255,255}+と書く方法。これはrgba(255,255,255,0.5)に変換されます。0.5の様に小数点を含む数でaを表現すると0～1の範囲で指定された物と見なし、整数で表現すると0～255で表現した物と見なします。{\color{\cred}ただし、1だけは0～1の範囲で指定されたと見なします}
+-\verb+\color[a\#rgb]{0.5\#fff},\color[a*rgb]{0.5*fff}+の様に指定する方法。これはrgbに関しては\#FFFの形式で表し、aの値だけ別に0～1の範囲、もしくは0～255の範囲で指定します。\#,*の記号は一致させてください。なお、どちらも\verb+\color[a*rgb]{127,FFF}+のように「,」で代用することも可能です。
+
+
+\section{文字に関するClassのまとめ}
+\begin{tabular}{|C|L|}\hline
+  \th class名&\th 説明\\\hline
+  tinysize&一般に50\%サイズのフォント\\\hline
+  scriptsize&一般に70\%サイズのフォント\\\hline
+  footnotesize&一般に80\%サイズのフォント\\\hline
+  largesize&一般に120\%サイズのフォント\\\hline
+  xlargesize&一般に140\%サイズのフォント\\\hline
+  xxlargesize&一般に170\%サイズのフォント\\\hline
+  hugesize&一般に210\%サイズのフォント\\\hline
+  xhugesize&一般に250\%サイズのフォント\\\hline
+  mcfamily&明朝体フォント\\\hline
+  gtfamily&ゴシック体フォント\\\hline
+  rmfamily&ローマン体フォント\\\hline
+  sffamily&サンセリフ体フォント\\\hline
+  ttfamily&タイプライタ体フォント\\\hline
+  boldweight&太文字\\\hline
+  slstyle&斜体\\\hline
+  itstyle&イタリック体\\\hline
+  scvariant&スモールキャップ体\\\hline
+\end{tabular}

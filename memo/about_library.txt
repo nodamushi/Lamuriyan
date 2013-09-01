@@ -1,0 +1,21 @@
+動作環境
+JRE1.7　以降
+
+
+Lamuriyanが利用している外部ライブラリーについて。
+
+juniversalchardet
+ http://code.google.com/p/juniversalchardet/
+  ファイルの文字コードの判定を行うため。1.0.3を利用
+
+CyberNeko HTML Parser
+ http://nekohtml.sourceforge.net/
+  HTMLDOM生成とパーサーを行う為。1.9.18を利用
+
+Xerces
+ http://xerces.apache.org/mirrors.cgi
+  CyberNeko HTML Parserが利用する為。2.0.0以降
+
+Groovy 2.1.1
+ http://groovy.codehaus.org/
+  コンバーターをスクリプトで書きたかった為。コンパイル時には必要だが、実行には必須ではない。（Groovyを使っていない限り）

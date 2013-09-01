@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html><head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+
+<title>
+第2章　　文章を書く
+</title>
+
+<meta content="noarchive,noindex,nofollow" name="robots">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" type="text/javascript">
+ </script>
+<link href="ntex.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div id="mainbody">
+<header id="pagetitle">
+<h1>
+第2章　　文章を書く
+</h1>
+</header>
+
+
+
+<p>基本的な文法はT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xに乗っ取っていますが、HTMLで表示する事を目的とした結果の違いがいくつかあります。</p>
+<nav>
+<header>
+<h1>目次</h1>
+</header>
+<ul>
+<li>
+<a class="ref" href="#__section:007">
+<span class="itemnumber">2-1</span><span class="itemtitle">改行をする</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:008">
+<span class="itemnumber">2-2</span><span class="itemtitle">段落を生成する</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:009">
+<span class="itemnumber">2-3</span><span class="itemtitle">フォントの大きさを変える</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:010">
+<span class="itemnumber">2-3.1</span><span class="itemtitle">フォントサイズを追加する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:011">
+<span class="itemnumber">2-4</span><span class="itemtitle">フォントファミリを変更する</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:012">
+<span class="itemnumber">2-4.1</span><span class="itemtitle">フォントファミリを追加する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:013">
+<span class="itemnumber">2-5</span><span class="itemtitle">太文字にする</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:014">
+<span class="itemnumber">2-6</span><span class="itemtitle">斜体にする</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:015">
+<span class="itemnumber">2-7</span><span class="itemtitle">スモールキャップ体にする</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:016">
+<span class="itemnumber">2-8</span><span class="itemtitle">文字の色を設定する</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:017">
+<span class="itemnumber">2-9</span><span class="itemtitle">文字に関するClassのまとめ</span></a>
+</li>
+</ul>
+</nav>
+<section class="sect" id="__section:007">
+<header>
+<h1><span class="secnumber">2-1章</span>改行をする</h1>
+</header>
+<p>T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xでは改行をしても、生成される出力結果は改行されません。L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanもソースコードで改行しても、結果には反映されません。改行をするには<span style="color:red;">\\</span>を用います。実際に文章中で使うと<br>
+このように改行されます。ただし、段落が生成されるわけではないので、行頭の字下げが起こっていないことが確認できるかと思います。<span style="color:green;">（字下げはL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの機能では無く、CSSで指定しています。）</span></p>
+<p>\\は\\[3em]の様に記述することで、改行後の行送りの幅を指定することが出来ます。<br>
+<span class="vspace" style="line-height:3em">&nbsp;</span><br>
+こんなかんじにね。</p>
+</section>
+<section class="sect" id="__section:008">
+<header>
+<h1><span class="secnumber">2-2章</span>段落を生成する</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは二回以上の改行があると新しい段落&lt;p&gt;を生成します。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="text-token">ここは第一段落です。</span></span></li><li class="evenline"><span class="linecontainer"><span class="text-token">一回の改行は段落も改行も生成しません。改行したいときは</span><span class="keyword-token">\\</span><span class="text-token">を用いてください。</span></span></li><li class="oddline"><span class="linecontainer"></span></li><li class="evenline"><span class="linecontainer"><span class="text-token">ここは第二段落です。</span></span></li></ol></pre></code>
+<div class="vspace" style="height:2em"></div>
+<p>&lt;p&gt;を発行して欲しくないときには、<span style="color:red;">\disableparagraph</span>コマンドを使うと、それ以降の同じグループでは段落&lt;p&gt;が生成されなくなります。再度段落を作りたい場合は<span style="color:red;">\enableparagraph</span>を利用します。これらの設定は同一グループの中だけで有効です。現在、段落を生成するかどうかは、\useparagraphコマンドで確認することが出来ます。この値がfなら段落は生成されず、tなら、段落が生成されます。なお、\useparagraphの値を変更しても、段落を生成するかどうかのフラグは変化しないので、確認する以外には用いないでください。</p>
+<p>なお、段落と段落の間の空白を作りたいときは\vspaceを利用してください。</p>
+</section>
+<section class="sect" id="__section:009">
+<header>
+<h1><span class="secnumber">2-3章</span>フォントの大きさを変える</h1>
+</header>
+<p>フォントの大きさを変えるには、\tiny,\scriptsize,\footnotesize,\large,\Large,\LARGE,\huge\Hugeを用います。</p>
+<p>これらはそれぞれ&lt;span class=&quot;～～size&quot;&gt;を出力します。class名は以下を参考にして、実際のフォントサイズはCSSを用いて指定してください。</p>
+<ul>
+<li>
+<p>\tiny:class=tinysize　　一般に50%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\scriptsize:class=scriptsize　　 一般に70%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\footnotesize:class=footnotesize　　一般に80%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\large:class=largesize　　一般に120%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\Large:class=xlargesize　　一般に140%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\LARGE:class=xxlargesize　　一般に170%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\huge:class=hugesize　　一般に210%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\Huge:class=xhugesize　　一般に250%のサイズのフォントです。</p>
+</li>
+<li>
+<p>\normalsize:デフォルトフォントサイズです。</p>
+</li>
+</ul>
+<section class="ssect" id="__section:010">
+<header>
+<h1><span class="secnumber">2-3.1</span>フォントサイズを追加する</h1>
+</header>
+<p>上記だけでおよそ十分だと思いますが、よりフォントサイズを追加したい場合もあるかもしれません。</p>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyan処理系は\fontsizeというコマンドの値からフォントの大きさを定義する<span style="color:#f65;">class名</span>を読み取っています。この値が<span style="color:#f65;">&quot;nomal&quot;</span>である場合はフォントサイズの指定が無視されます。normalを無視するルールは後述する他のフォントプロパティでも同じです。と、いうことは\fontsizeの中身を新たなclass名で置き換えれば、新しいフォントサイズを追加することが可能です。</p>
+<p>例として、超巨大フォントという意味を込めて、\exHugeを追加してみましょう。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="define-token">\newcommand</span><span class="block-token">{</span><span class="command-token">\exHuge</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\defstr</span><span class="command-token">\fontsize</span><span class="block-token">{</span><span class="text-token">exHugesize</span><span class="block-token">}</span><span class="block-token">}</span></span></li></ol></pre></code>
+<p><span style="color:red;">\defstr</span>はL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの処理系がコマンドの中身を文字列として読み取れるようにする為のコマンドです。\edefの結果をString型として保持すると思ってください。このコマンドを使わないとL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyan処理系は内容を読み取ることが出来ません。</p>
+</section>
+</section>
+<section class="sect" id="__section:011">
+<header>
+<h1><span class="secnumber">2-4章</span>フォントファミリを変更する</h1>
+</header>
+<p>フォントファミリを変更するには\mcfamily,\gtfamily,\rmfamily,\sffamily,\ttfamilyを使います。順に明朝体、ゴシック体、ローマン体、サンセリフ体、タイプライタ体をあらわあします。class名はコマンド名と全く同じです。</p>
+<p>引数部分だけフォントファミリを変更する\textmc,\textrm,\textsf,\texttt等も定義してあります。</p>
+<section class="ssect" id="__section:012">
+<header>
+<h1><span class="secnumber">2-4.1</span>フォントファミリを追加する</h1>
+</header>
+<p><a href="#__section:010">
+2-3.1章</a>
+で述べたのと同様にフォントファミリも追加することが出来ます。フォントファミリのclass名を定義しているコマンドは\fontfamilyです。</p>
+</section>
+</section>
+<section class="sect" id="__section:013">
+<header>
+<h1><span class="secnumber">2-5章</span>太文字にする</h1>
+</header>
+<p>\bfを使います。class名は&quot;boldweight&quot;です。引数の部分を太文字にする\textbfもあります。</p>
+<p>基本的にHTMLでは太文字にするか、普通の太さにするかしか使えないので太文字に関する新しい何かの追加をすることは無いと思いますが、これまで同様、\fontseriesの内容を変更することで太文字の定義を変えられます。</p>
+</section>
+<section class="sect" id="__section:014">
+<header>
+<h1><span class="secnumber">2-6章</span>斜体にする</h1>
+</header>
+<p>\itshape,\slshapeを使います。前者はイタリック体、後者は斜体を表します。日本語ではどっちも傾けるだけなので違いは無いらしいですが、英文では違いがあるそうです。\itshapeを指定するとclass名は&quot;itstyle&quot;が、\slshapeを指定するとclass名は&quot;slstyle&quot;になります。</p>
+<p>斜体に関して新しい定義をしたい場合はこれまでと同様、\fontshapeの内容を変更します。</p>
+</section>
+<section class="sect" id="__section:015">
+<header>
+<h1><span class="secnumber">2-7章</span>スモールキャップ体にする</h1>
+</header>
+<p>\scshapeを使います。class名はscvariantです。</p>
+<p>T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xではスモールキャップ体もフォントシェイプの一部ですが、CSSでは別項目になので、それにそってL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでも別項目になっています。</p>
+<p>これまで同様、新たに追加したい場合は、fontvariantの内容を変更します。</p>
+</section>
+<section class="sect" id="__section:016">
+<header>
+<h1><span class="secnumber">2-8章</span>文字の色を設定する</h1>
+</header>
+<p>\colorを使います。色に関してはclass名で指定するのでは無く、直接&quot;style=color:色&quot;を書き出します。引数部分だけ色を指定する\textcolorもあります。</p>
+<p>色の指定にはいくつかの方法があります。</p>
+<ul>
+<li>
+<p>\color{\#ffffff},\color{*ffffff}の様に色を書く方法。これはそのまま&quot;color:#ffffff&quot;となります。\#と書くのは面倒くさいので、*を代用することが出来ます。</p>
+</li>
+<li>
+<p>\color{red}の様に色の名前を書く方法。これもそのまま&quot;color:red&quot;となります。</p>
+</li>
+<li>
+<p>\color{rgba(255,255,255,1)}の様に書く方法。これもそのまま&quot;color:rgba(255,255,255,1)&quot;となります。</p>
+</li>
+<li>
+<p>\color[\#rgb]{ffffff},\color[*rgb]{ffffff}と書く方法。これは第二引数の内容に#を付加して色の値にします。</p>
+</li>
+<li>
+<p>\color[rgb]{255,255,255}と書く方法。これはrgbの各値を,区切りで0～255の値で表現します。</p>
+</li>
+<li>
+<p>\color[argb]{0.5,255,255,255},\color[argb]{127,255,255,255}と書く方法。これはrgba(255,255,255,0.5)に変換されます。0.5の様に小数点を含む数でaを表現すると0～1の範囲で指定された物と見なし、整数で表現すると0～255で表現した物と見なします。<span style="color:#f65;">ただし、1だけは0～1の範囲で指定されたと見なします</span></p>
+</li>
+<li>
+<p>\color[a\#rgb]{0.5\#fff},\color[a*rgb]{0.5*fff}の様に指定する方法。これはrgbに関しては#FFFの形式で表し、aの値だけ別に0～1の範囲、もしくは0～255の範囲で指定します。#,*の記号は一致させてください。なお、どちらも\color[a*rgb]{127,FFF}のように「,」で代用することも可能です。</p>
+</li>
+</ul>
+</section>
+<section class="sect" id="__section:017">
+<header>
+<h1><span class="secnumber">2-9章</span>文字に関するClassのまとめ</h1>
+</header>
+<table>
+<tr class="bordertop borderbottom">
+<th class="borderleft centeralign borderright">
+class名</th>
+<th class="borderleft leftalign borderright">
+説明</th>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+tinysize</td>
+<td class="borderleft leftalign borderright">
+一般に50%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+scriptsize</td>
+<td class="borderleft leftalign borderright">
+一般に70%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+footnotesize</td>
+<td class="borderleft leftalign borderright">
+一般に80%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+largesize</td>
+<td class="borderleft leftalign borderright">
+一般に120%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+xlargesize</td>
+<td class="borderleft leftalign borderright">
+一般に140%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+xxlargesize</td>
+<td class="borderleft leftalign borderright">
+一般に170%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+hugesize</td>
+<td class="borderleft leftalign borderright">
+一般に210%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+xhugesize</td>
+<td class="borderleft leftalign borderright">
+一般に250%サイズのフォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+mcfamily</td>
+<td class="borderleft leftalign borderright">
+明朝体フォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+gtfamily</td>
+<td class="borderleft leftalign borderright">
+ゴシック体フォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+rmfamily</td>
+<td class="borderleft leftalign borderright">
+ローマン体フォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+sffamily</td>
+<td class="borderleft leftalign borderright">
+サンセリフ体フォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+ttfamily</td>
+<td class="borderleft leftalign borderright">
+タイプライタ体フォント</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+boldweight</td>
+<td class="borderleft leftalign borderright">
+太文字</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+slstyle</td>
+<td class="borderleft leftalign borderright">
+斜体</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+itstyle</td>
+<td class="borderleft leftalign borderright">
+イタリック体</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+scvariant</td>
+<td class="borderleft leftalign borderright">
+スモールキャップ体</td>
+</tr>
+</table>
+</section>
+
+
+</div>
+</body></html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html><head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+
+<title>
+第4章　　数式
+</title>
+
+<meta content="noarchive,noindex,nofollow" name="robots">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" type="text/javascript">
+ </script>
+<link href="ntex.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div id="mainbody">
+<header id="pagetitle">
+<h1>
+第4章　　数式
+</h1>
+</header>
+
+
+
+<p>T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xで文章を書く最大のメリットは数式を簡単に書けるということでしょう。L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは数式をMathMLに変換して出力します。</p>
+<p>ブラウザでMathMLを表示するには以下のどちらかを利用してください。</p>
+<ol>
+<li>
+<p>MathML対応ブラウザで表示</p>
+</li>
+<li>
+<p>MathJax利用する</p>
+</li>
+</ol>
+<p>現在ではMathMLへのブラウザの対応状況は悪く、MathJaxを利用するのが無難かと思われます。</p>
+<nav>
+<header>
+<h1>目次</h1>
+</header>
+<ul>
+<li>
+<a class="ref" href="#__section:033">
+<span class="itemnumber">4-1</span><span class="itemtitle">数式の書き方</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:034">
+<span class="itemnumber">4-1.1</span><span class="itemtitle">$数式$形式</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:035">
+<span class="itemnumber">4-1.2</span><span class="itemtitle">$$数式$$形式</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:036">
+<span class="itemnumber">4-1.3</span><span class="itemtitle">eqnarray環境</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:037">
+<span class="itemnumber">4-2</span><span class="itemtitle">array環境</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:038">
+<span class="itemnumber">4-2.1</span><span class="itemtitle">array環境における縦線横線について</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:039">
+<span class="itemnumber">4-3</span><span class="itemtitle">MathJaxを使う問題点</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:040">
+<span class="itemnumber">4-4</span><span class="itemtitle">数式モードで使える実体参照</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:041">
+<span class="itemnumber">4-4.1</span><span class="itemtitle">足りない実体参照を自作する</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:042">
+<span class="itemnumber">4-5</span><span class="itemtitle">関数、演算子を定義する</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:043">
+<span class="itemnumber">4-6</span><span class="itemtitle">マクロに関して</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:044">
+<span class="itemnumber">4-6.1</span><span class="itemtitle"><math xmlns="http://www.w3.org/1998/Math/MathML">
+<mmultiscripts>
+<mi>P</mi><mi>m</mi><none></none>
+<mprescripts></mprescripts>
+<mi>n</mi><none></none>
+</mmultiscripts>
+</math>
+とかの前後に付く記号を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:045">
+<span class="itemnumber">4-6.2</span><span class="itemtitle">&lt;mmultiscripts&gt;を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:046">
+<span class="itemnumber">4-6.3</span><span class="itemtitle">&lt;menclose&gt;の角丸や円を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:047">
+<span class="itemnumber">4-6.4</span><span class="itemtitle">数式に打ち消し線を書きたい</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:048">
+<span class="itemnumber">4-6.5</span><span class="itemtitle">ていうか、&lt;menclose&gt;書きたい</span></a>
+</li>
+</ul>
+</li>
+<li>
+<a class="ref" href="#__section:049">
+<span class="itemnumber">4-7</span><span class="itemtitle">自作マクロについて</span></a>
+<ul>
+<li>
+<a class="ref" href="#__section:050">
+<span class="itemnumber">4-7.1</span><span class="itemtitle">&lt;mrow&gt;で囲うべきか判断できない場合</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:051">
+<span class="itemnumber">4-7.2</span><span class="itemtitle">スコープの為のグループは作らない</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:052">
+<span class="itemnumber">4-7.3</span><span class="itemtitle">ある範囲を一つの&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;にしたい</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:053">
+<span class="itemnumber">4-7.4</span><span class="itemtitle">^_を上下につけるか横に付けるかを変更する</span></a>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<section class="sect" id="__section:033">
+<header>
+<h1><span class="secnumber">4-1章</span>数式の書き方</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは数式は$数式$,$$数式$$,\[数式\],eqnarray環境,eqnarray*環境を用いることで書くことが出来ます。</p>
+<section class="ssect" id="__section:034">
+<header>
+<h1><span class="secnumber">4-1.1</span>$数式$形式</h1>
+</header>
+<p>$数式$は「<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mi>x</mi><mo>=</mo><mi>y</mi></math>
+」の様にインライン形式として出力されます。ここでは大型演算子<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mo>&sum;</mo></math>
+などは<math xmlns="http://www.w3.org/1998/Math/MathML">
+<munderover>
+<mo>&sum;</mo><mn>0</mn><mn>1</mn></munderover>
+</math>
+の様になります。</p>
+<p>インラインとブロック形式のHTMLの違いとしては、&lt;math&gt;にdisplay=&quot;block&quot;属性が付くか付かないかの違いしかありませんが。</p>
+</section>
+<section class="ssect" id="__section:035">
+<header>
+<h1><span class="secnumber">4-1.2</span>$$数式$$形式</h1>
+</header>
+<p>$$数式$$はブロック形式の数式として出力されます。</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mi>x</mi><mo>+</mo><mi>y</mi></math>
+<p>の様になります。\[と\]はL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanではどちらも$$に置換されるだけなので、実際には\[数式\[の様に書いても数式と判断されます。これ豆な(-_-)</p>
+<p>ここでは<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mo>&sum;</mo></math>
+などの大型演算子は</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<munderover>
+<mo>&sum;</mo><mn>0</mn><mn>1</mn></munderover>
+</math>
+<p>の様に上下につきます。</p>
+</section>
+<section class="ssect" id="__section:036">
+<header>
+<h1><span class="secnumber">4-1.3</span>eqnarray環境</h1>
+</header>
+<p>T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xと同じように、数式に番号を付けることが出来、数式の位置揃えが出来る環境です。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\begin{eqnarray}</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="keyword-token">\label</span><span class="block-token">{</span><span class="text-token">eq:微分の定義</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="command-token">\frac</span><span class="block-token">{</span><span class="text-token">df(x)</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">dx</span><span class="block-token">}</span>&nbsp;<span class="text-token">&amp;=&amp;</span><span class="command-token">\lim</span><span class="text-token">_</span><span class="block-token">{</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x</span><span class="command-token">\to</span><span class="text-token">0</span><span class="block-token">}</span><span class="command-token">\frac</span><span class="block-token">{</span><span class="text-token">f(x+</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x)-f(x)</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x</span><span class="block-token">}</span><span class="keyword-token">\\</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="keyword-token">\label</span><span class="block-token">{</span><span class="text-token">eq:偏微分の定義</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="command-token">\frac</span><span class="block-token">{</span><span class="command-token">\partial</span>&nbsp;<span class="text-token">f(x,y,z...)</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\partial</span>&nbsp;<span class="text-token">x</span><span class="block-token">}</span><span class="text-token">&amp;=&amp;</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="command-token">\lim</span><span class="text-token">_</span><span class="block-token">{</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x</span><span class="command-token">\to</span><span class="text-token">0</span><span class="block-token">}</span><span class="command-token">\frac</span><span class="block-token">{</span><span class="text-token">f(x+</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x,y,z,...)-f(x,y,z,...)</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\delta</span>&nbsp;<span class="text-token">x</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\end{eqnarray}</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mtable columnalign="right center left">
+<mlabeledtr id="__label:007">
+<mtd>
+<mtext>(4:1-1)</mtext></mtd>
+<mtd>
+<mfrac>
+<mrow>
+<mi>d</mi><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow>
+<mrow>
+<mi>d</mi><mi>x</mi></mrow>
+</mfrac>
+</mtd>
+<mtd>
+<mo>=</mo></mtd>
+<mtd>
+<munder>
+<mi>lim</mi><mrow>
+<mi>&#948;</mi><mi>x</mi><mo>&rightarrow;</mo><mn>0</mn></mrow>
+</munder>
+<mfrac>
+<mrow>
+<mi>f</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>&#948;</mi><mi>x</mi><mo>)</mo><mo>-</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow>
+<mrow>
+<mi>&#948;</mi><mi>x</mi></mrow>
+</mfrac>
+</mtd>
+</mlabeledtr>
+<mlabeledtr id="__label:008">
+<mtd>
+<mtext>(4:1-2)</mtext></mtd>
+<mtd>
+<mfrac>
+<mrow>
+<mo>&part;</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mi>.</mi><mi>.</mi><mi>.</mi><mo>)</mo></mrow>
+<mrow>
+<mo>&part;</mo><mi>x</mi></mrow>
+</mfrac>
+</mtd>
+<mtd>
+<mo>=</mo></mtd>
+<mtd>
+<munder>
+<mi>lim</mi><mrow>
+<mi>&#948;</mi><mi>x</mi><mo>&rightarrow;</mo><mn>0</mn></mrow>
+</munder>
+<mfrac>
+<mrow>
+<mi>f</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>&#948;</mi><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>)</mo><mo>-</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>)</mo></mrow>
+<mrow>
+<mi>&#948;</mi><mi>x</mi></mrow>
+</mfrac>
+</mtd>
+</mlabeledtr>
+</mtable>
+</math>
+<p>一つ目の要素は右寄せ、二つ目は中央寄せ、三つ目は左寄せになります。本家T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xと違って、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの表はいくらでも拡張可能なので、三つ以上&があっても、問題なく表示されます。その際、位置揃えは（たぶん）中央寄せになります。</p>
+<p>デフォルトでは数式の番号は(チャプター番号:セクション番号-セクション内での式の番号)になります。チャプター番号とセクション番号が0の時はそれぞれ省略されます。これらの設定を変更したい場合は\theeqnumberを書き換えてください。全部の行で式番号が要らない場合はeqnarray*環境を用いてください。</p>
+<p>\nonumberを用いることで、その行の数式は書かれないようになります。</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mtable columnalign="right center left">
+<mlabeledtr>
+<mtd></mtd>
+<mtd>
+<mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mtd>
+<mtd>
+<mo>=</mo></mtd>
+<mtd>
+<msup>
+<mi>x</mi><mn>100</mn></msup>
+<mo>+</mo><msup>
+<mi>x</mi><mn>99</mn></msup>
+<mo>+</mo><msup>
+<mi>x</mi><mn>98</mn></msup>
+<mo>+</mo><msup>
+<mi>x</mi><mn>96</mn></msup>
+<mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi></mtd>
+</mlabeledtr>
+<mlabeledtr>
+<mtd>
+<mtext>(4:1-3)</mtext></mtd>
+<mtd></mtd>
+<mtd></mtd>
+<mtd>
+<mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msup>
+<mi>x</mi><mn>3</mn></msup>
+<mo>+</mo><msup>
+<mi>x</mi><mn>2</mn></msup>
+<mo>+</mo><mi>x</mi><mo>+</mo><mn>1</mn></mtd>
+</mlabeledtr>
+</mtable>
+</math>
+</section>
+</section>
+<section class="sect" id="__section:037">
+<header>
+<h1><span class="secnumber">4-2章</span>array環境</h1>
+</header>
+<p>行列などの表組の数式を書きたい場合に使います。T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xと同様\begin{array}{crl}の様に使います</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">$</span><span class="keyword-token">$</span></span></li><li class="evenline"><span class="linecontainer"><span class="text-token">A</span>&nbsp;<span class="text-token">=</span>&nbsp;<span class="command-token">\left</span><span class="text-token">(</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="keyword-token">\begin</span><span class="block-token">{</span><span class="text-token">array</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">ccc</span><span class="block-token">}</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-token">1</span>&nbsp;<span class="text-token">&amp;</span>&nbsp;<span class="text-token">0</span>&nbsp;<span class="text-token">&amp;</span>&nbsp;<span class="text-token">0</span><span class="keyword-token">\\</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-token">0</span>&nbsp;<span class="text-token">&amp;</span>&nbsp;<span class="text-token">1</span>&nbsp;<span class="text-token">&amp;</span>&nbsp;<span class="text-token">0</span><span class="keyword-token">\\</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-token">0</span>&nbsp;<span class="text-token">&amp;</span>&nbsp;<span class="text-token">0&amp;</span>&nbsp;<span class="text-token">1</span></span></li><li class="oddline"><span class="linecontainer">&nbsp;&nbsp;<span class="keyword-token">\end</span><span class="block-token">{</span><span class="text-token">array</span><span class="block-token">}</span><span class="command-token">\right</span><span class="text-token">)</span></span></li><li class="evenline"><span class="linecontainer"><span class="keyword-token">$</span><span class="keyword-token">$</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mi>A</mi><mo>=</mo><mfenced close=")">
+<mtable columnalign="center center center">
+<mtr>
+<mtd>
+<mn>1</mn></mtd>
+<mtd>
+<mn>0</mn></mtd>
+<mtd>
+<mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd>
+<mn>0</mn></mtd>
+<mtd>
+<mn>1</mn></mtd>
+<mtd>
+<mn>0</mn></mtd>
+</mtr>
+<mtr>
+<mtd>
+<mn>0</mn></mtd>
+<mtd>
+<mn>0</mn></mtd>
+<mtd>
+<mn>1</mn></mtd>
+</mtr>
+</mtable>
+</mfenced>
+</math>
+<section class="ssect" id="__section:038">
+<header>
+<h1><span class="secnumber">4-2.1</span>array環境における縦線横線について</h1>
+</header>
+<p>\hlineや環境の引数の|には現在対応していません。というのも、MathMLの仕様についてよく理解してないからです。（　＾ω＾）ｺﾞﾒﾝﾈ</p>
+</section>
+</section>
+<section class="sect" id="__section:039">
+<header>
+<h1><span class="secnumber">4-3章</span>MathJaxを使う問題点</h1>
+</header>
+<p>\labelを宣言すると、該当ノードにIDを設定し\refではそのIDにリンクを張る仕様になっていますが、MathJaxを使うと、数式中で定義したIDが消えてしまい、リンク先がなくなってしまう問題があります。</p>
+<p>通常の\refを用いて書くと、リンクが生成されてしまうので、\nolinkrefを用いるか、convsetting.hcvのconvert項目のRefLabelConverterのオプションにmlabeledtrを追加してください。\nolinkrefを用いるとこれ単体がリンクを使わない参照になります。後者のコンバーターの設定を用いると、\refを用いても、\refが付くノードの名前が引数に一致した場合は、リンクを使わない参照を作るようにします。デフォルトではこの設定が付いていますので、数式への参照はリンクが生成されません。MathJaxは使わないので、数式へのリンクが生成されて欲しい場合は、<br>
+<span class="vspace" style="line-height:1.5em">&nbsp;</span><br>
+reflabel&gt;nodamushi.ntex.html.RefLabelConverter:mlabeledtr,math<br>
+<span class="vspace" style="line-height:1.5em">&nbsp;</span><br>
+という設定の後ろにある「mlabeledtr,math」を削除してください。</p>
+</section>
+<section class="sect" id="__section:040">
+<header>
+<h1><span class="secnumber">4-4章</span>数式モードで使える実体参照</h1>
+</header>
+<p>ひらく様の<a href="http://www.hinet.mydns.jp/?TeX_mathml.rb">
+ひらくの工房-TeX_mathml.rb</a>
+に載っている記号については、参考という名の丸コピいたしました。これ書いてるときにページ見てて気がついたのですが、別ページにまだいっぱい作ってない記号が載っていました。ぶっちゃけ、これ作った本人が<math xmlns="http://www.w3.org/1998/Math/MathML">
+<mo>&sum;</mo><mo>&int;</mo><mi>lim</mi></math>
+ぐらいがあれば何も問題ないというゴミ屑なので、面倒くさいので放置です（　＾ω＾）</p>
+<section class="ssect" id="__section:041">
+<header>
+<h1><span class="secnumber">4-4.1</span>足りない実体参照を自作する</h1>
+</header>
+<p>あの実体参照がないとか、人を馬鹿にしてんじゃねーぞ死ねnodamushi!!という事が多分にあるでしょう。その意見にはおおむね賛成ですが、何も貴方が犯罪者になる必要はありません。自分で定義しましょう。</p>
+<p>実体参照もマクロを使って定義しています。そのためのマクロが\mathescapeです。</p>
+<p>\mathescape#1#2,#3という構文で、#1は登録するコマンドシーケンス名を、#2は実体参照の文字列を、「,」を挟んで#3は&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;のどれでくくるかの指定をします。指定には以下の一文字を使います。</p>
+<table>
+<tr class="bordertop borderbottom">
+<th class="borderleft centeralign borderright">
+第三引数</th>
+<th class="borderleft leftalign borderright">
+<p>説明</p>
+</th>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+o,O</td>
+<td class="borderleft leftalign borderright">
+<p>&lt;mo&gt;で囲みます。+や-や(などの演算子に付けます</p>
+</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+n,N</td>
+<td class="borderleft leftalign borderright">
+<p>&lt;mn&gt;で囲みます。数値を表します</p>
+</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+t,T</td>
+<td class="borderleft leftalign borderright">
+<p>&lt;mtext&gt;で囲みます。文字列を表します。</p>
+</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+i,I</td>
+<td class="borderleft leftalign borderright">
+<p>&lt;mi&gt;で囲います。xとかyとか基本的に何でも&lt;mi&gt;には入るみたいです。</p>
+</td>
+</tr>
+<tr class="bordertop borderbottom">
+<td class="borderleft centeralign borderright">
+a,A</td>
+<td class="borderleft leftalign borderright">
+<p>&lt;mi&gt;で囲います。i,Iと違い、mathvariant=normalの属性がつきます。</p>
+<p>なんでa,Aかって？nodamushiの語学力のなさが原因だよ。何も思いつかなかったからアルファベットの最初でいいやってだけだよ(-_-)</p>
+</td>
+</tr>
+</table>
+<p>大文字と小文字の違いは、大文字の場合</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<munderover>
+<mo>&sum;</mo><mn>0</mn><mn>10</mn></munderover>
+</math>
+<p>の様に上下に付くようになります。<br>
+<span class="vspace" style="line-height:5em">&nbsp;</span><br>
+</p>
+<p>では、実際に定義をしてみましょう。実体参照には&と#の文字があって、そのままだと毎回\&,\#と書かないといけません。これは面倒ですのでこれらのカテゴリコードを通常の文字列に変更してしまいましょう。他の範囲に影響を出さない為にグループで囲っておきます。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="command-token">\bgroup</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\catcode</span>&nbsp;<span class="text-token">`\&amp;=12</span></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\catcode</span>&nbsp;<span class="text-token">`</span><span class="command-token">\#</span><span class="text-token">=12</span></span></li><li class="evenline"><span class="linecontainer"></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\global</span><span class="command-token">\mathescape</span><span class="command-token">\sum</span>&nbsp;<span class="text-token">&amp;sum;,O</span></span></li><li class="evenline"><span class="linecontainer"></span></li><li class="oddline"><span class="linecontainer"><span class="command-token">\egroup</span></span></li></ol></pre></code>
+</section>
+</section>
+<section class="sect" id="__section:042">
+<header>
+<h1><span class="secnumber">4-5章</span>関数、演算子を定義する</h1>
+</header>
+<p>\mathescapeでも定義できますが、一箇所使うだけだってのに、いちいち定義なんてしてらんない、って時には\operatornameを使いましょう。これはT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xと動作は一緒で、関数を定義するときに使います。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer"><span class="block-token">{</span><span class="text-token">arg</span><span class="keyword-token">\,</span><span class="text-token">max</span><span class="block-token">}</span><span class="text-token">_</span><span class="block-token">{</span><span class="text-token">x</span><span class="command-token">\in</span>&nbsp;<span class="text-token">X</span><span class="block-token">}</span><span class="command-token">\text</span><span class="block-token">{</span><span class="text-token">と</span><span class="block-token">}</span><span class="command-token">\operatorname</span><span class="text-token">*</span><span class="block-token">{</span><span class="text-token">arg</span><span class="keyword-token">\,</span><span class="text-token">max</span><span class="block-token">}</span><span class="text-token">_</span><span class="block-token">{</span><span class="text-token">x</span><span class="command-token">\in</span>&nbsp;<span class="text-token">X</span><span class="block-token">}</span><span class="text-token">　sin^2</span><span class="command-token">\text</span><span class="block-token">{</span><span class="text-token">と</span><span class="block-token">}</span><span class="command-token">\operatorname</span><span class="block-token">{</span><span class="text-token">sin</span><span class="block-token">}</span><span class="text-token">^2</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<msub>
+<mrow>
+<mi>a</mi><mi>r</mi><mi>g</mi><mi> </mi><mi>m</mi><mi>a</mi><mi>x</mi></mrow>
+<mrow>
+<mi>x</mi><mo>&in;</mo><mi>X</mi></mrow>
+</msub>
+<mtext>と</mtext><munder>
+<mi>arg max</mi><mrow>
+<mi>x</mi><mo>&in;</mo><mi>X</mi></mrow>
+</munder>
+<mi>　</mi><mi>s</mi><mi>i</mi><msup>
+<mi>n</mi><mn>2</mn></msup>
+<mtext>と</mtext><msup>
+<mi>sin</mi><mn>2</mn></msup>
+</math>
+<p>演算子の場合は\mathbin,\mathopが使えます。</p>
+</section>
+<section class="sect" id="__section:043">
+<header>
+<h1><span class="secnumber">4-6章</span>マクロに関して</h1>
+</header>
+<p>\over,\under,\frac,\sqrt,\textなど、基本的な物は最初から実装してあります。</p>
+<section class="ssect" id="__section:044">
+<header>
+<h1><span class="secnumber">4-6.1</span><math xmlns="http://www.w3.org/1998/Math/MathML">
+<mmultiscripts>
+<mi>P</mi><mi>m</mi><none></none>
+<mprescripts></mprescripts>
+<mi>n</mi><none></none>
+</mmultiscripts>
+</math>
+とかの前後に付く記号を書きたい</h1>
+</header>
+<p>\sidesetを使うことが出来ます。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\sideset</span><span class="block-token">{</span><span class="text-token">_n</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">_m</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">P</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mmultiscripts>
+<mi>P</mi><mi>m</mi><none></none>
+<mprescripts></mprescripts>
+<mi>n</mi><none></none>
+</mmultiscripts>
+</math>
+</section>
+<section class="ssect" id="__section:045">
+<header>
+<h1><span class="secnumber">4-6.2</span>&lt;mmultiscripts&gt;を書きたい</h1>
+</header>
+<p>\multiscriptsを使うことが出来ます。このマクロは</p>
+<pre>
+#4  #5
+  #1
+#2  #3
+</pre><p>の様な配置になります。何も表記したくない場所は\noneNodeと記入してください。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\multiscripts</span><span class="block-token">{</span><span class="text-token">M</span><span class="block-token">}</span><span class="command-token">\alpha</span><span class="command-token">\noneNode</span><span class="block-token">{</span><span class="command-token">\beta</span><span class="text-token">+1</span><span class="block-token">}</span><span class="command-token">\omega</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mmultiscripts>
+<mi>M</mi><none></none>
+<mi>&#969;</mi><mprescripts></mprescripts>
+<mi>&#945;</mi><mrow>
+<mi>&#946;</mi><mo>+</mo><mn>1</mn></mrow>
+</mmultiscripts>
+</math>
+</section>
+<section class="ssect" id="__section:046">
+<header>
+<h1><span class="secnumber">4-6.3</span>&lt;menclose&gt;の角丸や円を書きたい</h1>
+</header>
+<p>\roundedbox,\circleが使えます。書式は\roundedbox[#1]#2です。第一引数は&lt;menclose&gt;の属性を,区切りで並べます。（id=rbox,class=rboxclassの様に）。第二引数は&lt;menclose&gt;の中身です。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\roundedbox</span><span class="block-token">{</span><span class="text-token">x</span><span class="block-token">}</span>&nbsp;<span class="command-token">\circle</span><span class="block-token">{</span><span class="text-token">y</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<menclose notation="roundedbox">
+<mi>x</mi></menclose>
+<menclose notation="circle">
+<mi>y</mi></menclose>
+</math>
+</section>
+<section class="ssect" id="__section:047">
+<header>
+<h1><span class="secnumber">4-6.4</span>数式に打ち消し線を書きたい</h1>
+</header>
+<p>\cancelが使えます。書式は\cancel[#1]#2です。第一引数はu,v,h,dのうちいずれか一文字を選択してください。省略した場合はuになります。実装は&lt;menclose&gt;の～strikeを使っています。第一引数も、これの一文字目です。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer">&nbsp;&nbsp;<span class="command-token">\frac</span><span class="block-token">{</span><span class="text-token">1</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\cancel</span><span class="block-token">{</span><span class="text-token">(a+b)</span><span class="block-token">}</span><span class="block-token">}</span><span class="command-token">\frac</span><span class="block-token">{</span><span class="command-token">\cancel</span><span class="text-token">[d]</span><span class="block-token">{</span><span class="text-token">(a+b)</span><span class="block-token">}</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\cancel</span><span class="text-token">[h]</span><span class="block-token">{</span><span class="text-token">x</span><span class="block-token">}</span><span class="block-token">}</span><span class="command-token">\cancel</span><span class="text-token">[v]</span><span class="block-token">{</span><span class="text-token">x</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<mfrac>
+<mn>1</mn><menclose notation="updiagonalstrike">
+<mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></menclose>
+</mfrac>
+<mfrac>
+<menclose notation="downdiagonalstrike">
+<mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></menclose>
+<menclose notation="horizontalstrike">
+<mi>x</mi></menclose>
+</mfrac>
+<menclose notation="verticalstrike">
+<mi>x</mi></menclose>
+</math>
+</section>
+<section class="ssect" id="__section:048">
+<header>
+<h1><span class="secnumber">4-6.5</span>ていうか、&lt;menclose&gt;書きたい</h1>
+</header>
+<p>\encloseが使えます。書式は\enclose[#1]#2#3です。第一引数は&lt;menclose&gt;の属性を,区切りで並べます。第二引数は&lt;menclose&gt;のnotation属性を指定します。第三引数は&lt;menclose&gt;の中身です。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="keyword-token">\[</span></span></li><li class="evenline"><span class="linecontainer"><span class="command-token">\enclose</span><span class="block-token">{</span><span class="text-token">actuarial</span><span class="block-token">}</span><span class="block-token">{</span><span class="text-token">a^2+b^2</span><span class="block-token">}</span></span></li><li class="oddline"><span class="linecontainer"><span class="keyword-token">\]</span></span></li></ol></pre></code>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">
+<menclose notation="actuarial">
+<msup>
+<mi>a</mi><mn>2</mn></msup>
+<mo>+</mo><msup>
+<mi>b</mi><mn>2</mn></msup>
+</menclose>
+</math>
+</section>
+</section>
+<section class="sect" id="__section:049">
+<header>
+<h1><span class="secnumber">4-7章</span>自作マクロについて</h1>
+</header>
+<p>ここに書いてない機能については、自作マクロを作成するしかありません。</p>
+<p>数式モードでマクロは基本的には\boxと\mfragと\setAttr,\setAttrsを駆使してDOMを生成していくことで作ります。</p>
+<p>これらはL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanにおける他のマクロの作り方（今度書く）と同様ですが、いくつか特殊なルールがあります。</p>
+<section class="ssect" id="__section:050">
+<header>
+<h1><span class="secnumber">4-7.1</span>&lt;mrow&gt;で囲うべきか判断できない場合</h1>
+</header>
+<p>MathMLにおいて、&lt;mrow&gt;は様々な場面で使われる。例えば、&lt;msup&gt;などは二つの要素を持つが、中に数式を入れたい場合は<br>
+<span class="vspace" style="line-height:3em">&nbsp;</span><br>
+&lt;msup&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt; &lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;<br>
+<span class="vspace" style="line-height:3em">&nbsp;</span><br>
+といった具合に&lt;mrow&gt;で囲う必要がある。しかし、後ろの&lt;mn&gt;2&lt;/mn&gt;は要素が一つしかないので、&lt;mrow&gt;で囲う必要性はない。むろん、囲っても構わないのだが、<span class="boldweight">美しくない</span>。要素が一つなら&lt;mrow&gt;で囲わないのがジャスティスである。しかし、これからいくつの要素が入るかなんてマクロ実行段階で知る術はない。</p>
+<p>そこで、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは数式モードにおいて特殊なタグ&lt;mfrag&gt;というタグを定義している。このタグは要素が一つしかない場合はDocumentFragmentとして働き、要素が二つ以上あるときは&lt;mrow&gt;になるというタグだ。\mfrag#1マクロで&lt;mfrag&gt;を生成できる。後は#1の部分に中身を書けば良い。</p>
+</section>
+<section class="ssect" id="__section:051">
+<header>
+<h1><span class="secnumber">4-7.2</span>スコープの為のグループは作らない</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは数式モードにおいて、begingroupフックを利用している。グループの中身を<a href="#__section:050">
+4-7.1章</a>
+にて説明した&lt;mfrag&gt;で囲う命令を発効する為である。こうしなければ、{x+1}^2が&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;msup&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;となってしまうからである。</p>
+<p>そこで、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは{でグループが作られるたびに（マクロの引数のグループは関係ない）設定したトークンをアウトプットするeverybegingroupというフックを用意し、これを解決した。しかし、これが逆にマクロを作る上で問題となることがある。</p>
+<p>例えば、引数をそのまま{#1}と書き出した場合、この{に反応して</p>
+<mfrag>
+<p>が</p>
+</mfrag>
+<p>生成される。それは意図した挙動でないことが多いだろう。したがって、数式モードで使うマクロでは{}を用いてグループを作らないことが賢明である。</p>
+<p>それでもグループが必要な場合には、\bgroup,\egroupのペアを用いる。数式モードでは\bgroup,\egroupはeverybegingroupのフックが呼び出されない。</p>
+</section>
+<section class="ssect" id="__section:052">
+<header>
+<h1><span class="secnumber">4-7.3</span>ある範囲を一つの&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;にしたい</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanは数式モードにおいて、\@startchargroupコマンドが発行されてから、\@endchargroupが現れるまでの間を一つの&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;と認識します。\@startchargroupの引数は「o,i,n,t」のいずれか一文字です。それぞれ、&lt;mo&gt;&lt;mi&gt;&lt;mn&gt;&lt;mtext&gt;に対応しています。\mathopや\operatorなどはこれを利用しています。</p>
+</section>
+<section class="ssect" id="__section:053">
+<header>
+<h1><span class="secnumber">4-7.4</span>^_を上下につけるか横に付けるかを変更する</h1>
+</header>
+<p>あるノードに対して^_の位置はそのノードに対して\@underoverflagが呼ばれているかどうかで決まる。</p>
+<code class="nhlight nhlight-TeX">
+<pre><ol start="1"><li class="oddline"><span class="linecontainer"><span class="command-token">\box</span><span class="block-token">{</span><span class="text-token">nodename</span><span class="block-token">}</span><span class="block-token">{</span><span class="command-token">\@underoverflag</span>&nbsp;<span class="text-token">内容</span><span class="block-token">}</span></span></li></ol></pre></code>
+<p>の様に書くとこの&lt;nodename&gt;は上下に^_が付く。</p>
+</section>
+</section>
+
+
+</div>
+</body></html>

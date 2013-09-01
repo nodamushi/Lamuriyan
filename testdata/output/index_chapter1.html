@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html><head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+
+<title>
+第1章　　Lamuriyanについて
+</title>
+
+<meta content="noarchive,noindex,nofollow" name="robots">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" type="text/javascript">
+ </script>
+<link href="ntex.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div id="mainbody">
+<header id="pagetitle">
+<h1>
+第1章　　Lamuriyanについて
+</h1>
+</header>
+
+
+
+<nav>
+<header>
+<h1>目次</h1>
+</header>
+<ul>
+<li>
+<a class="ref" href="#__section:003">
+<span class="itemnumber">1-1</span><span class="itemtitle">作り始めた動機</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:004">
+<span class="itemnumber">1-2</span><span class="itemtitle">L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの方針</span></a>
+</li>
+<li>
+<a class="ref" href="#__section:005">
+<span class="itemnumber">1-3</span><span class="itemtitle">L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの由来</span></a>
+</li>
+</ul>
+</nav>
+<section class="sect" id="__section:003">
+<header>
+<h1><span class="secnumber">1-1章</span>作り始めた動機</h1>
+</header>
+<p>私がいい加減ブログの記事を自分で読む時に探すのが大変なので、HPにまとめようかとしていたときに、やたら私の記事は数式が多いのでT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xでホームページ管理できないかなぁと考え、探してみましたが、</p>
+<ol>
+<li>
+<p>Javaで使える</p>
+</li>
+<li>
+<p>DOM構造をはき出す</p>
+</li>
+<li>
+<p>relをリンクに変換する</p>
+</li>
+<li>
+<p>マクロが使える</p>
+</li>
+</ol>
+<p>ぐらいの条件で数秒探してみましたが、残念なことに私は探すことが出来ませんでした。</p>
+<p>ある女王は言ったそうです。<span class="boldweight" style="color:#5c9;">パンがないなら作ればいいじゃない。</span></p>
+<p>私もその言葉に従うことにしました。ないなら作ればいいと。そして気がついたのです。<br>
+<span class="vspace" style="line-height:4em">&nbsp;</span><br>
+</p>
+<p><span class="largesize">あ、私、T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xで引数とるマクロすら書いたことなかったわ</span></p>
+<p>T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>X仕様どころか、引数とるマクロすら書いたことがないのに処理環境を作り始めた世紀の愚者nodamushiによるT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xライクな何かL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはこうして始まったのです。</p>
+</section>
+<section class="sect" id="__section:004">
+<header>
+<h1><span class="secnumber">1-2章</span>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの方針</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはHTMLのDOM構造を出力することを最終目標としており、<span style="color:red;">デザインをすることやサイトを構築することを目的としていません。</span></p>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanで出力された結果を別に作ってあるテンプレートに挿入してHTML全体を作る、例えば<span style="color:#f65;">記事の内容を作るような場面</span>を想定して作っています。もちろん、やろうと思えばL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanだけでデザインもすることは出来ますが、わざわざL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanで行うメリットが見当たりません。</p>
+<p>デザインはCSSが担当すべきであり、HTMLが担当するべき事ではありません。そのため、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanはなるべくデザインに関する内容は<span style="color:red;">classを出力することで表現します。</span>たとえば、太文字にしろという\bftextなどは、&lt;span style=&quot;font-weight:bold&quot;&gt;を出力するのでは無く、&lt;span class=&quot;boldweight&quot;&gt;という結果を出力します。実際に太文字にするかどうか、どういうデザインにするかはCSSに一任します。なので、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyan上では太文字にしろ、という命令でも、実際には細字にしても構いませんし、テキストシャドウを用いて表現しても構いません。</p>
+<p>サイト構築に関しても、L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの立ち位置はページを出力、もしくはページの一部を生成するツールという立ち位置を意識しており、サイト管理、構成はL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanを用いるプログラムに任せることを前提としています。<br>
+<span class="vspace" style="line-height:3em">&nbsp;</span><br>
+</p>
+<p><a href="#__section:003">
+1-1章</a>
+でも述べたように、処理系を作り始めるにはお粗末なT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xの知識しか無く、<span class="boldweight" style="color:#f46;">T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xとの完全な互換を目的とした物では</span><span class="boldweight" style="color:#f46;text-decoration:underline;">ありません。</span></p>
+<p>あくまで、T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xライクな<span class="boldweight">何か</span>であり、過去の資産の再利用は気にしていません。過去に書いたT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xの記事を軽い修正でHTMLに出来ればな、ぐらいの心づもりです。</p>
+<p>過去の資産の利用ではなく、これから記事を書いていくときに、<span class="boldweight" style="color:#36f;">T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>X形式の数式を使うことが出来</span>、<span class="boldweight" style="color:#36f;">数式などの番号管理をする必要が無く</span>、<span class="boldweight" style="color:#36f;">&lt;section&gt;タグとかも書かなくても自動で生成され</span>、<span class="boldweight" style="color:#36f;">同じ所はマクロで自動化することが出来</span>、あと私が過去に作った<span class="boldweight" style="color:#36f;">ソースコードをシンタックスハイライトするプログラムを自動で呼び出すことが出来る</span>、そんなシステムを目指しています。</p>
+<p>その他の精神は以下のような物です。</p>
+<ol>
+<li>
+<p>動けばいい</p>
+</li>
+<li>
+<p>実行速度は求めない</p>
+</li>
+<li>
+<p>省メモリは求めない</p>
+</li>
+<li>
+<p>本家T<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>Xと挙動が違う！バグだ！？否、仕様である</p>
+</li>
+</ol>
+<div class="vspace" style="height:2em"></div>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanを単純にMathMLを出力するツールとしてだけ使いたいという要望が万一ありましたら、DOMを生成するのでは無く、直接文字列を出力する為の簡易ツールを公開する………かもしれません。</p>
+</section>
+<section class="sect" id="__section:005">
+<header>
+<h1><span class="secnumber">1-3章</span>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanの由来</h1>
+</header>
+<p>L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanは<span class="boldweight" style="color:red;"> n</span>odamushiが作るT<span style="text-transform:uppercase;margin-left:-0.1667em;vertical-align:-0.3em;line-height:0;margin-right:-0.115em;">e</span>X環境ということで、nTeXと呼んでいましたが、ググってみたら普通にいっぱい出てきました。というわけでnTeXから改名してL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanという名前に変えました。この仮本部はnTeXの名前で作ったので、URLがntexです。</p>
+<p>名前の由来は「LaTeX目指してみたけど、マジ無理やん」を略して「<span class="largesize">La無理やん</span>」です。漢字ひらがなローマ字混じりだと打つのが面倒くさいのでL<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanとなりました。L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanでは\Lamuriyanとかくことで表示されます。頭文字のLAはLaTeXから来てるので、AがLの上に乗ります。L<span style="text-transform: uppercase; font-size: 70%;margin-left: -0.3em;vertical-align: 0.15em; line-height: 0;">a</span>muriyanと複雑な表記をしたくないときはLamuriyanと書いてください。</p>
+</section>
+
+
+</div>
+</body></html>

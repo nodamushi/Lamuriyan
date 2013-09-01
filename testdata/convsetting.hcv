@@ -1,0 +1,370 @@
+%　TeXから作ったノードをHTMLのタグに変換するルールを定義します。
+%
+%　名前:　で始まる行から　end:で始まる行までが一つのルールです。
+%　このルールは基本ルール以外にも、独自ルールを作ることが出来ます。
+%　独自に定義したルールは、HTMLConvert.getRule(String)から読み取ることが出来ます。
+%
+%　コメントは%から行末までです\%でエスケープすることが出来ます。
+%　独自ルールにおいて、\%をエスケープしたくないときは\\%としてください。
+%　「\%」という文字列が必要なときには\\\%としてください。なお、この場合を除く\はエスケープする必要はありません。
+%　なお、基本ルール内部では%のエスケープは文法上不要なので出来ません
+%　ルールにおいて、前後のスペースはtrimされます。
+%
+%　なお、block:やend:などの後ろには何かいても無視されます。
+
+%前処理を行うクラスを定義します。
+%定義された順に渡されます。
+%指定できるクラスはtex.html.Processorを実装した、
+%空のコンストラクタを持つクラスのみです。
+preprocess:
+%	***.****.****.PreProcessingImpl　　の様にクラス名を記述
+end:
+
+%ブロックに関する定義
+%sectionなど、TeXではブロックとして定義するのが難しい物を
+%ブロックに変換します。この処理がまず最初に行われます。
+%この変換に渡されるのは\tagnameでblock-～という値を代入したノードだけです。
+%変換後のタグの名前を>で定義します。
+%入れ子関係を<で定義します。関連する入れ子関係はgroup{}で定義します。{}内部は改行をしないでください。
+%a<bはaはbの中になくてはならないという意味です。
+%なお、ここでいうbは、block-bのことで、bというエレメントが親にあっても、それは関係ありません。
+%入れ子関係は、厳密に定義された順番道理にならないと行けないわけではなく、sectionの下にsubsectionを飛ばしてsubsubsectionが来ても問題ありません。
+%なお、対象となったノードはHTMLには変換されませんが、その属性は変換結果に引き継がれます。
+%各ブロックは、自分以上のブロックが来ると自動で閉じますが、強制的に区切る場合はblock-end-名前というノードを作ります。
+%これらは全て対象はNodeだけです。Elementは対象ではありません。
+
+block:　
+	%section関連の定義
+	group{chapter,section,subsection,subsubsection,subsubsubsection}
+
+	%変換後のタグの名前
+	
+	%chapterはnodamushiのホームページEGGw用の設定　
+	%後処理でchapterのノードだけ抜き出して別ページにする。
+	chapter>chapter
+	
+	section>section
+	subsection>section
+	subsubsection>section
+	subsubsubsection>section
+
+	%入れ子関係の定義
+	section<chapter
+	subsection<section
+	subsubsection<subsection
+	subsubsubsection<subsubsection
+
+	endgroup
+end:
+
+
+%TeXだけで処理することが難しい処理をJavaのクラスに委任します。
+%指定できるクラスはlamuriyan.html.Converterを実装した、
+%無引数のデフォルトコンストラクタか、Stringを一つだけ受け取るコンストラクタを持つクラスです
+%この処理は変換のブロック処理の後に行われる、DOMに変換する作業の時に呼ばれます。
+%ここで定義されたクラスは設定ファイルが「読み込まれた」時に一度だけインスタンスを生成し、該当ノードについてconvertを呼び出します。
+%Converterは渡されたノードの全ての子要素について、変換義務を追います
+%書式は、
+%変換するタグ名>変換クラス[:コンストラクタの引数][?プロパティ]
+%です。コンストラクタの引数とプロパティは省略できます。順番を逆には出来ません。
+%コンストラクタの引数に?の文字を使わないようにしてください。
+%必要な場合はうまいこと回避する手段を編み出してください
+%プロパティを利用する代わりに独自定義のルールを利用することも出来ます
+%
+%GroovyConverterについて。
+%わざわざJavaで書いてコンパイルするのも面倒くさいという場合の為に
+%lamuriyan.html.GroovyConverterというクラスがあります。利用には当然Groovyが必要です。
+%コンストラクタの引数に実行するgroovyファイルを指定してください。
+%Groovy実行時に定義してある変数はConverter.convertの引数と同じです。
+%
+%  convertnode[lamuriyan.parser.node.TeXNode]:変換対象のノード
+%  source     [lamuriyan.html.HTMLConverter]:変換を実行しているコンバーター
+%  root       [lamuriyan.parser.node.environment.RootDocument]　変換対象のルートドキュメント
+%  property   [java.lang.String]:この設定ファイルで指定したプロパティ
+%
+%処理の結果はConverter.convert同様にorg.w3c.dom.Nodeを返してください。
+%
+convert:
+	convertnav>lamuriyan.html.NavConverter
+	htmlcode>lamuriyan.html.HTMLParseConverter
+	math>lamuriyan.html.MathModeConverter
+	reflabel>lamuriyan.html.RefLabelConverter:mlabeledtr,math
+end:
+%子だけ展開して、自身はタグを生成しない環境を定義します。
+skipenvironment:
+    skiptag
+end:
+
+%HTMLに変換しないノードを定義します。子要素も展開されません
+ignorenode:
+    ignore
+end:
+
+
+
+%Nodeに定義されている属性で、HTMLに残す物を定義します。
+%この処理はDOMに変換された後で行われます。
+%属性名<ノード名 で指定します。
+%属性が値をとらないときは!を属性名の後に付けます
+%ノード名を指定しない場合は全てに適応されます。<*でも同じです
+%
+%ノード名は*を使うと全てのノード名に対応させます。
+%none:～とすると、条件にマッチする属性はDOMから削除します。
+%主に*で定義した場合の例外に使います。
+%
+%これらのルールは後に書いた物が優先されます。
+%
+%attrname
+%none:attrname<tagname
+%
+%この様に書くと、tagnameだけはattrnameが付加されません。
+%順序を逆にすると、全てのノードにattrnameが付加されてしまいます。
+%なお、ここに指定する物に関係なく、独自データ属性data-は付加されます。
+%
+%これらのリストは
+%http://www.webzoit.net/hp/it/internet/homepage/html/html5/elements/attributes/
+%https://developer.mozilla.org/en-US/docs/MathML/Attributes
+%を参考にぽちぽち書き出しました。
+%
+%
+attribute:
+    number<chapter
+
+    xmlns    
+    accesskey
+    accept<input
+    accept-charset<form
+    action<form
+    alt<area,img,input
+    async!<script
+    autocomplete<form,input
+    autofocus!<button,input,keygen,select,textarea
+    autoplay!<audio,video
+    border<table
+    challenge<keygen
+    charset<meta,script
+    checked!<command,input
+    cite<blockquote,del,ins,q
+    class
+    cols<textarea
+    colspan<td,th
+    content<meta
+    contenteditable
+    contextmenu
+    controls!<audio,video
+    coords<area
+    data<object
+    datetime<time
+    default!<track
+    defer!<script
+    dir
+    dirname<input,textarea
+    disabled!<button,command,fieldset,input,keygen,optgroup,option,select,textarea
+    draggable
+    dropzone
+    enctype<form
+    for<label,output
+    form<button,fieldset,input,keygen,label,meter,progress,select,textarea
+    formaction<button,input
+    formenctype<button,input
+    formmethod<button,input
+    formnovalidate!<button,input
+    formtarget<button,input
+    headers<td,th
+    height<canvas,embed,iframe,img,input,object,video
+    hidden!
+    high<meter
+    href<a,area,link,base
+    hreflang<a,area,link
+    http-equiv<meta
+    icon<command
+    id
+    ismap!<img
+    keytype<keygen
+    kind<track
+    label<command,menu,optgroup,option,track
+    lang
+    list<input
+    loop<audio,video
+    low<meter
+    manifest<html
+    max<meter,progress
+    maxlength<input,textarea
+    media<a,area,link,source,style
+    mediagroup<audio,video
+    method<form
+    min<input,meter
+    multiple!<input,select
+    name,button,fieldset,input,keygen,output,select,textarea,form,iframe,object,map,meta,param
+    novalidate!<form
+    open!<details
+    optimum<meter
+    pattern<input
+    placeholder<input,textarea
+    poster<video
+    preload<audio,video
+    pubdate!<time
+    radiogroup<command
+    readonly!<input,textarea
+    rel<a,area,link
+    required<input,select,textarea
+    reversed!<ol
+    rows<textarea
+    rowspan<th,td,mtd
+    sandbox<iframe
+    scope<th
+    scoped!<style
+    seamless!<iframe
+    selected!<option
+    shape<area
+    size<input,select
+    sizes<link
+    span<col,colgroup
+    spellcheck
+    src<audio,embed,iframe,img,input,script,source,track,video,mglyph
+    srcdoc<iframe
+    srclang<track
+    start<ol
+    step<input
+    style
+    tabindex
+    title
+    target<a,area,base,form
+    type<a,area,link,button,input,command,embed,object,script,source,style,menu
+    usemap<img,object
+    value<button,option,input,li,meter,progress,param
+    width<canvas,embed,iframe,img,input,object,video,mglyph,mpadded,mspace,mtable
+    wrap<textarea
+    
+    
+    
+    %JSのイベントハンドラ 全ての要素かつ、値を持ち、none:で無いときだけ、
+    %,区切りで記述できることにする。面倒くさかったんだ。,で終わってはいけない
+    onabort,onblur,oncanplay,oncanplaythrough,onchange,onclick,oncontextmenu,oncuechange,ondblclick,ondrag,ndragend,ondragenter,ondragleave,ondragover,ondragstart,ondrop,ondurationchange,onemptied,onended,onerror,onfocus,onformchange,onforminput,oninput,oninvalid,onkeydown,onkeypress,onkeyup,onload,onloadeddata,onloadedmetadata,onloadstart,onmousedown,onmousemove,onmouseout,onmouseover,onmouseup,onmousewheel,onpause,onplay,onplaying,onprogress,onratechange,onreadystatechange,onreset,onscroll,onseeked,onseeking,onselect,onshow,onstalled,onsubmit,onsuspend,ontimeupdate,onvolumechange,onwaiting
+
+
+    %mathml用
+    accent<mo,mover,munderover
+    accentunder<munder,munderover
+    actiontype<maction
+    align<mtable,munder,mover,munderover,mstack
+    alignmentscope<mtable
+    altimg<math
+    altimg-width<math
+    altimg-height<math
+    altimg-valign<math
+    alttext<math
+    bevelled<mfrac
+    charalign<mstack
+    close<mfenced
+    columnalign<mtable,mtd,mtr,mlabeledtr
+    columnlines<mtable
+    columnspacing<mtable
+    columnspan<mtd
+    columnwidth<mtable
+    crossout<mscarry
+    decimalpoint<mstyle
+    denomalign<mfrac
+    depth<mpadded
+    dir<math,mi,mo,mrow,ms,mtext
+    display<math
+    displaystyle<mstyle,mtable
+    edge<malignmark
+    equalcolumns<mtable
+    equalrows<mtable
+    fence<mo
+    form<mo
+    frame<mtable
+    framespacing<mtable
+    groupalign<maligngroup,mtable,mtd,mtr
+    height<mglyph,mpadded,mspace
+    indentalign<mo,mspace
+    indentalignfirst<mo,mspace
+    indentalignlast<mo,mspace
+    indentshift<mo,mspace
+    indentshiftfirst<mo,mspace
+    indentshiftlast<mo,mspace
+    indenttarget<mo,mspace
+    infixlinebreakstyle<mstyle
+    largeop<mo
+    length<msline
+    linebreak<mo,mspace
+    linebreakmultchar<mo,mspace
+    linebreakstyle<mo,mspace
+    lineleading<mo,mspace
+    linethickness<mfrac
+    location<mscarries
+    longdivstyle<mlongdiv
+    lspace<mo,mpadded
+    lquote<ms
+    mathbackground<math,maction,maligngroup,malignmark,menclose,merror,mfenced,mfrac,mglyph,mi,mlabeledtr,mlongdiv,mmultiscripts,mn,mo,mover,mpadded,mphantom,mroot,mrow,ms,mscarries,mscarry,msgroup,msline,mspace,msprt,msrow,mstack,mstyle,msub,msup,msubsup,mtable,mtd,mtext,mtr,munder,munderover,semantics,annotation,annotation-xml
+    mathcolor<math,maction,maligngroup,malignmark,menclose,merror,mfenced,mfrac,mglyph,mi,mlabeledtr,mlongdiv,mmultiscripts,mn,mo,mover,mpadded,mphantom,mroot,mrow,ms,mscarries,mscarry,msgroup,msline,mspace,msprt,msrow,mstack,mstyle,msub,msup,msubsup,mtable,mtd,mtext,mtr,munder,munderover,semantics,annotation,annotation-xml
+    mathsize<mi,mn,mo,ms,mtext
+    mathvariant<mi,mn,mo,ms,mtext
+    maxsize<mo
+    minlabelspacing<mtable
+    minsize<mo
+    movablelimits<mo
+    notation<menclose
+    numalign<mfrac
+    open<mfenced
+    overflow<math
+    position<msgroup,msrow,mscarries,msline
+    rowalign<mtable,mtd,mtr
+    rowlines<mtable
+    rowspacing<mtable
+    rspace<mo
+    rquote<ms
+    scriptlevel<mstyle
+    scriptminsize<mstyle
+    scriptsizemultiplier<mstyle
+    selection<maction
+    separator<mo
+    separators<mfenced
+    shift<msgroup
+    side<mtable
+    stackalign<mstack
+    stretchy<mo
+    subscriptshift<mmultiscripts,msub,msubsup
+    supscriptshift<mmultiscripts,msup,msubsup
+    symmetric<mo
+    voffset<mpadded
+    xlink:href<math,maction,maligngroup,malignmark,menclose,merror,mfenced,mfrac,mglyph,mi,mlabeledtr,mlongdiv,mmultiscripts,mn,mo,mover,mpadded,mphantom,mroot,mrow,ms,mscarries,mscarry,msgroup,msline,mspace,msprt,msrow,mstack,mstyle,msub,msup,msubsup,mtable,mtd,mtext,mtr,munder,munderover,semantics,annotation,annotation-xml
+    %mathml用　終わり
+
+end:
+
+
+%実はまだ未実装(^_^;)
+%クラス名を変更します
+%before>afterの形で定義します
+%before1&before2>afterの様に&でつなぐと、before1とbefore2の二つが存在するときにこの二つをafterに変換します。
+%あるノード名にだけ適応させたい場合は
+%nodename.before1>afterの様に記述することでnodenameのbefore1だけafterになります。
+%ルールは上から順に適応します。
+%rule1>rule2
+%rule2>rule1
+%と定義してある場合、rule1はrule2に変換された後、rule1に変換されます。
+
+renameclass:
+
+end:
+
+%無視するクラス名を指定します
+%このルールはrenameclassを実行した後に行われます
+%ルールを複数指定するには、改行とカンマ,区切りで出来ます。
+ignoreclass:
+    normal
+end:
+
+
+
+
+%全ての変換処理が終わった後に処理をするクラスを定義します。
+%preprocess同様、定義された順に渡されます。
+%指定できるクラスはtex.html.Processorを実装した、
+%空のコンストラクタを持つクラスのみです。
+postprocess:
+
+end:
+

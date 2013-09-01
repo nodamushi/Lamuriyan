@@ -1,0 +1,839 @@
+% init.sty ver 0.1
+% Lamuriyanの実行に必須のコマンド群
+% コンストラクタで一番最初にパースされ、実行されます。
+
+% パラグラフを利用するかどうかのフラグ
+% 変更には\disableparagraph,\enableparagraphを利用してください
+\defstr\useparagraph{t}
+
+
+
+\def\newenvironment#1{\@ifnextchar[{\exp@newenvironment{#1}}{\exp@newenvironment{#1}[0]}}
+\def\exp@newenvironment#1[#2]{\@ifnextchar[{\java@optnewenv{#1}{#2}}{\java@nooptnewenv{#1}{#2}}}
+\def\newverbenvironment#1{\@ifnextchar[{\exp@newvenv{#1}}{\exp@newvenv{#1}[0]}}
+\def\exp@newvenv#1[#2]{\@ifnextchar[{\java@optnewvenv{#1}{#2}}{\java@nooptnewvenv{#1}{#2}}}
+
+\def\newcommand#1{\@ifnextchar[{\exp@newcommand{#1}}{\exp@newcommand{#1}[0]}}
+\def\exp@newcommand#1[#2]{\@ifnextchar[{\java@@newopcommand{#1}{#2}}{\java@@newcommand{#1}{#2}}}
+\def\renewcommand#1{\@ifnextchar[{\exp@renewcommand{#1}}{\exp@renewcommand{#1}[0]}}
+\def\newcounter#1{\@ifnextchar[{\java@newcounter{#1}}{\java@newcounter{#1}[]}}
+
+\def\exp@renewcommand#1[#2]{\@ifnextchar[{\java@@renewopcommand{#1}{#2}}{\java@@renewcommand{#1}{#2}}}
+\def\@calloptionmacro#1#2{\@ifnextchar[{#1}{#1[#2]}}
+\def\value#1{\csname c@#1 \endcsname}
+\let\bgroup={
+\let\egroup=}
+\def\trim#1{#1}%
+
+%次のフラグをonにすると、nTﾖX独特のファイルの改行が現れるたびにフックを呼び出す様になります。
+%フックは\everynewline=～で定義します。
+\newcommand{\onNLhook}{\defstr\@newlineflag{on}}
+\newcommand{\offNLhook}{\defstr\@newlineflag{off}}
+
+\newcommand{\createNode}[2][i]{\if#1b\createBlockNode{#2}\else\createInlineNode{#2}\fi}
+\newcommand{\createElement}[2][b]{\if#1i\createInlineElement{#2}\else\createBlockElement{#2}\fi}
+\newcommand{\insertElement}[2][b]{\if#1i{inline}\insertInlineElement{#2}\else\insertBlockElement{#2}\fi}
+\newcommand{\setid}[1]{\setAttr{id}{#1}}
+\def\do#1{}%\doが実行される際は後ろはなかったことにする
+\def\@for#1:=#2\do#3{%
+   \java@for#1{#2}{#3}}
+
+
+\def\expaft@for#1:=#2\do#3{\java@for#1{#2}{#3}}
+\def\@tfor#1:=#2\do#3{\java@tfor#1{#2}{#3}}
+\def\@foreach#1:=#2\do#3{\java@foreach#1#2{#3}}
+\let\\\newline
+\let\linebreak\newline%HTMLでlinebreakを実装できなかった
+
+%letなどで保存しておいた状態に戻します。
+\def\resetparagraph#1{%
+  \expandafter\ifx#1f \disableparagraph \else%
+  \enableparagraph\fi}
+
+%protected関連
+\def\@unexpandable@protect{\noexpand\protect\noexpand}
+\def\protected@edef#1#2{%
+    \let\@old@protect\protect%\relaxのはずなんだけどね。
+    \let\protect\@unexpandable@protect%
+    \edef#1{{#2}}%
+    \let\protect\@old@protect%
+}
+  
+
+% インラインでない要素を作成する
+\newcommand{\box}[3][]{%
+  \bgroup%
+    \createElement{#2}%
+    \parentmark\himp@memory%
+    \setAttrs{#1}%
+    \bgroup#3\egroup%
+    \hreset\himp@memory%
+  \egroup%
+}
+% インラインの要素を作成する
+\newcommand{\inline}[3][]{%
+  \bgroup%
+  \createElement[i]{#2}\parentmark\himp@memory\setAttrs{#1}%
+  \bgroup#3\egroup%
+  \hreset\himp@memory%
+  \egroup%
+}
+
+
+\newcommand{\ref}[2][]{%
+  \inline[name={#2}]{reflabel}{\nodevalue{#1}}%
+}
+\newcommand{\nolinkref}[2][]{%
+  \linline[nolink=true,name={#2}]{reflabel}{\nodevalue{#1}}%
+}
+
+\newcommand{\labelable}[2][]{%
+  \@labelable{#1}{#2}%
+}
+
+%曜日
+\def\sunday{日}
+\def\monday{月}
+\def\tuesday{火}
+\def\wednessday{水}
+\def\thursday{木}
+\def\friday{金}
+\def\saturday{土}
+\def\weekname#1{%
+\ifnum0=#1\sunday\else\ifnum1=#1\monday\else\ifnum2=#1\tuesday\else\ifnum3=#1\wednessday\else\ifnum4=#1\thursday\else\ifnum5=#1\friday\else\ifnum6=#1\saturday\fi\fi\fi\fi\fi\fi\fi}
+\def\today{\year/\month/\day}
+%環境のhtmltagnameプロパティはデフォルトではskiptagとなっている。
+%skipの環境は、自身の子要素を親要素に展開し、自分のタグを生成しない
+\def\tagname#1{\setprop{htmltagname}{#1}}
+
+\newcounter{chapter}
+\newcounter{section}[chapter]
+\newcounter{subsection}[section]
+\newcounter{subsubsection}[subsection]
+\newcounter{subsubsubsection}[subsubsection]
+
+
+\def\thechapter{\arabic{chapter}}
+\def\thesection{\ifnowchapter \arabic{chapter}-\fi\arabic{section}}
+\def\thesubsection{\thesection.\arabic{subsection}}
+\def\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+\def\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+
+
+%フォントに関する設定
+%\defstrで定義する
+%\defや\edefなどで定義することはできない。
+%なお、nomalのプロパティを除く、全てのプロパティは、
+%spanタグのclassとして定義される。後のことはCSSに一任する。
+
+%文字の大きさは\fontsizeを参照する　クラス名には全てsizeが後ろに付く
+\def\normalsize{\defstr\fontsize{nomal}}
+\def\tiny{\defstr\fontsize{tinysize}}%一般に50%のサイズ
+\def\scriptsize{\defstr\fontsize{scriptsize}}%一般に70%のサイズ
+\def\footnotesize{\defstr\fontsize{footnotesize}}%一般に80%
+\def\large{\defstr\fontsize{largesize}}%一般に120%
+\def\Large{\defstr\fontsize{xlargesize}}%一般に140%
+\def\LARGE{\defstr\fontsize{xxlargesize}}%一般に170%
+\def\huge{\defstr\fontsize{hugesize}}%一般に210%
+\def\Huge{\defstr\fontsize{xhugesize}}%一般に250%
+
+%フォントファミリーは\fontfamilyを使う クラス名にはfamilyがつく
+\def\normalfamily{\defstr\fontfamily{nomal}}
+\def\mcfamily{\defstr\fontfamily{mcfamily}}%明朝体
+\def\textmc#1{{\mcfamily#1}}
+\def\gtfamily{\defstr\fontfamily{gtfamily}}%ゴシック体
+\def\textgt#1{{\gtfanily#1}}
+\def\rmfamily{\defstr\fontfamily{rmfamily}}%ローマン体
+\def\textrm#1{\bgroup\rmfamily#1\egroup}
+\def\sffamily{\defstr\fontfamily{sffamily}}%サンセリフ体
+\def\textsf#1{\bgroup\sffamily#1\egroup}
+\def\ttfamily{\defstr\fontfamily{ttfamily}}%タイプライタ体
+\def\texttt#1{\bgroup\ttfamily#1\egroup}
+
+%フォントシリーズは\fontseriesを使う。
+%cssではfont-weightに対応する。boldweightのみデフォルトでは宣言してある
+\def\nomalseries{\defstr\fontseries{nomal}}
+\let\mdseries\nomalseries
+\def\bfseries{\defstr\fontseries{boldweight}}
+\let\bf\bfseries
+\def\textbf#1{\bgroup\bfseries#1\egroup}
+
+%フォントシェイプは\fontshapeを使う。
+%cssではfont-styleに対応する。クラス名にはstyleが付く
+\def\nomalshape{\defstr\fontshape{nomal}}
+\let\upshape\nomalshape
+\def\textup#1{\bgroup\upshape#1\egroup}
+\def\itshape{\defstr\fontshape{itstyle}}%イタリック体
+\def\textit#1{\bgroup\itshape#1\egroup}
+\def\slshape{\defstr\fontshape{slstyle}}%斜体
+\def\textsl#1{\bgroup\slshape#1\egroup}
+
+%TeXではスモールキャップ体はシェイプだが、CSSではfont-variantなので
+%\fontvariantと別にする。ただし、コマンド名はscshapeのままにしておいた。
+%同じブロックないで解除するときは\nomalvariantである
+\def\nomalvariant{\defstr\fontvariant{nomal}}
+\def\scshape{\defstr\fontvariant{scvariant}}
+\def\textsc#1{\bgroup\scshape#1\egroup}
+
+
+
+%色は\fontcolorを使う
+%色についてはクラスの指定では無く、直接style="color:値;"属性を付加する。
+\newcommand{\color}[2][name]{%
+  \defstr\fontcolor{\torgb{#1}{#2}}}
+\newcommand{\textcolor}[3][name]{%
+  \bgroup\color[#1]{#2}#3\egroup}
+
+% text-decorationについて。slineは<s>とは違う。
+\newcommand{\udecoration}{%
+  \defstr\fontdecoration{underline}}
+\newcommand{\uline}[1]{%
+  \bgroup\defstr\udecoration#1\egroup}
+\newcommand{\odecoration}{%
+  \defstr\fontdecoration{overline}}
+\newcommand{\oline}[1]{%
+  \bgroup\odecoration#1\egroup}
+\newcommand{\sdecoration}{%
+  \defstr\fontdecoration{line-throuth}}
+\newcommand{\sline}[1]{%
+  \bgroup\sdecoration#1\egroup}
+  
+
+%langage=enでは\\はバックスラッシュになる可能性が高い
+\def\backslash{\span[lang=en]{\YENYEN}}
+%settingNodeに対して属性を設定する
+\newcommand{\setAttr}[2]{\@setAttr d{#1}{#2}}
+%現在の環境に対して属性を設定する
+\newcommand{\seteAttr}[2]{\@setAttr e{#1}{#2}}
+%現在のノードを追加する先のエレメント対して属性を設定する
+\newcommand{\setcAttr}[2]{\@setAttr c{#1}{#2}}
+%現在のノードを追加する先のエレメントの親に属性を設定する。
+%ただし、現在の追加先が環境である場合は何もしない
+\newcommand{\setpAttr}[2]{\@setAttr p{#1}{#2}}
+%現在のノードを追加する先のエレメントの親に属性を設定する。
+%現在の追加先が環境であっても、その親に対して追加をする
+\newcommand{\setPAttr}[2]{\@setAttr P{#1}{#2}}
+%現在のノードを追加する先の中のノードの中で一番最後の要素に対して属性を設定する
+\newcommand{\setsAttr}[2]{\@setAttr s{#1}{#2}}
+
+\newcommand{\@foraction}[2]{%
+  \@for\i@temp:={#2}\do{\expandafter\@divide@eq\i@temp\@vid#1}}
+%\def\@divide@eq#1=#2\@vid#3{#3{#1}{#2}}
+\def\@divide@eq#1\@vid#2{\@divide ={#1}\expandafterall{\expandafterall{#2}\expandafter{\@divideresultone}}\expandafter{\@divideresulttwo}}
+
+% 属性名=値を,区切りで記述して、
+%いっぺんに属性を設定する。
+\newcommand{\setAttrs}[1]{\@foraction\setAttr{#1}}
+\newcommand{\seteAttrs}[1]{\@foraction\seteAttr{#1}}
+\newcommand{\setcAttrs}[1]{\@foraction\setcAttr{#1}}
+\newcommand{\setpAttrs}[1]{\@foraction\setpAttr{#1}}
+\newcommand{\setPAttrs}[1]{\@foraction\setPAttr{#1}}
+\newcommand{\setsAttrs}[1]{\@foraction\setsAttr{#1}}
+
+% プロパティ名=値を,区切りで指定していっぺんに指定する
+\newcommand{\setprops}[1]{\@foraction\setprop{#1}}
+
+\newenvironment{text}{}{}
+\newverbenvironment{verbatim}{\tagname{pre}\disableparagraph}{}
+\newcommand{\span}[2][]{\inline[#1]{span}{#2}}
+\newcommand{\vspace}[2][b]{%
+\if#1b\insertElement{div}\else\insertElement[i]{span}\fi%
+\setAttr{class}{vspace}\setAttr{style}{height:#2}}
+\newcommand{\hspace}[1]{\span[class=hspace,style=width:#1;]{}}
+\newenvironment{itemize}{\begin{list}\tagname{ul}}{\end{list}}
+\newenvironment{enumerate}{\begin{list}\tagname{ol}}{\end{list}}
+
+% input時にTextEnvironmentが自動でエスケープする機能を抑制する
+% <>"'“”の文字列をTextEnvironmentはエスケープしようとするので、
+% これらのエスケープ文字を同じ文字に設定することでエスケープを制御する。
+\newcommand{\notescapechar}{%
+  \expandafter\defstr\csname <\endcsname{<}%
+  \expandafter\defstr\csname >\endcsname{>}%
+  \defstr\escapedquo{"}%
+  \defstr\escapesequot{'}%
+  \defstr\escapelquo{“}%
+  \defstr\escaperdquo{”}%
+}
+
+%参考Wikipedia このコマンドは必須ですが何か？
+\def\TeXemarginright{-0.115em}
+\def\TeXemarginleft{-0.1667em}
+\def\TeXevertical{-0.3em}
+\def\TeX{%
+  T%
+  \span[style=%
+    text-transform:uppercase;margin-left:\TeXemarginleft;%
+    vertical-align:\TeXevertical;line-height:0;margin-right:\TeXemarginright;]{e}%
+  X%
+}
+\def\Lamuriyan{%
+  L%
+  \span[style=%
+  text-transform: uppercase; font-size: 70\%;margin-left: -0.3em;%
+  vertical-align: 0.15em; line-height: 0;]{a}%
+  muriyan}
+
+
+
+% tabular環境
+% とりあえず、今のところrlcと|には対応した
+
+\def\rowbegin{}
+\def\rowend{}
+\def\cellbegin{}
+\def\cellend{}
+\def\cellbetween{}
+\newcounter{tabular@imp@counter}
+\def\tabular@init#1{%
+  \expandafter\if#1r%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@right@cell}%
+  \else\expandafter\if#1l%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@left@cell}%
+  \else\expandafter\if#1c%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@center@cell}%
+  \else\expandafter\if#1R%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@RIGHT@cell}%
+  \else\expandafter\if#1L%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@LEFT@cell}%
+  \else\expandafter\if#1C%
+    \stepcounter{tabular@imp@counter}%
+    \push\tabular@cell@startLIST{\tabular@alignment@CENTER@cell}%
+  \else\expandafter\if#1|%
+    \set\tabular@cell@betweenLIST{\value{tabular@imp@counter}}{%
+    \setbothcellattr{class=borderright}{class=borderleft}}%
+  \fi\fi\fi\fi\fi\fi\fi}
+
+\newenvironment{tabular}[2][]{%
+  \tagname{table}%
+  \setAttrs{#1}%
+  \def\th{\cellprop{cellname}{th}}%
+  \let\@oldparagraph\useparagraph
+  \def\tabular@alignment@right@cell{\cellattr{class}{rightalign}%
+    \resetparagraph\@oldparagraph%
+  }%
+  \def\tabular@alignment@left@cell{\cellattr{class}{leftalign}%
+    \resetparagraph\@oldparagraph%
+  }%
+  \def\tabular@alignment@center@cell{\cellattr{class}{centeralign}%
+    \resetparagraph\@oldparagraph%
+  }%
+  \def\tabular@alignment@RIGHT@cell{\cellattr{class}{rightalign}\disableparagraph}%
+  \def\tabular@alignment@LEFT@cell{\cellattr{class}{leftalign}\disableparagraph}%
+  \def\tabular@alignment@CENTER@cell{\cellattr{class}{centeralign}\disableparagraph}%
+  \newlist\tabular@cell@startLIST%
+  \newlist\tabular@cell@betweenLIST%
+  \push\tabular@cell@startLIST{}%0番を潰す為に空の要素を入れておく
+  \def\cellbetween{%
+    \get\tabular@cell@betweenLIST{\cellnumber}}%
+  \def\cellbegin{\get\tabular@cell@startLIST{\cellnumber}}%
+  \setcounter{tabular@imp@counter}{0}%
+  \@tfor\tabular@imp@memory:=#2\do{\tabular@init\tabular@imp@memory}%
+  \begin{basetable}%
+}{%
+\end{basetable}%
+}
+
+%%%%%%%%数式モードの設定%%%%%%%%%%%%%%%%%
+% TeXだけでHTMLのDOM構造を作るのは無理があると勝手に
+% 判断し、基本的にはコンバーターに任すことにする
+% mfragエレメントは、コンバーターにより、必要ならばmrowに、不要ならば
+% DocumentFragmentに変換される要素である。
+% 具体的には、中身が<mo>や<mi><mn>一つならばDocumentFragmentに、
+% そうでないならば、mrowに変換する
+% <mo>、<mi>、<mn>について
+% 数字か<mo>登録されている文字以外はすべて一文字ずつ<mi></mi>で囲う。
+% ただし、\mathop{arg\,max}みたいなのに、どう対応するのかが問題である。
+% そこで、\math～{}は以下の様に変換することにする
+%  \@startchargroup{ o| i | n }
+%   #1
+%  \@endchargroup
+% この様にグループに対し、グループタイプを設定し、
+% MathEnvironmentにoperationか、identifierか、numberかを告げる。
+% この宣言があった後はMathEnvironmentはインプットされる文字を
+% 自動でmiやmo、mnで囲うことをせず、対応するTeXElementに文字を追加していく。
+% \@endchargroupがくると、MathEnvironmentは一つTeXElementから抜ける。
+% grouptypeが登録されていない初期状態では、先に述べたように一文字ずつタグで囲っていく。
+% ただし、numberに関しては、連続してnumberが来る限り、同じタグに登録していく。
+% さらに、一つ以上のnumberがあるときに.が来ると、これを小数点と見なし数字であると見なす。
+% 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\mfrag}[1]{\box{mfrag}{#1}}
+\newcommand{\@mathgroup}[2]{%
+  \@startchargroup#1%
+  \bgroup#2\egroup%
+  \@endchargroup}
+
+
+
+
+% sp,sbはmathmlではmsup,msub,msubsupまたはmover,munder,munderoverに変換されるが
+% a^b_c →<msubsup><mi>a</mi><mi>c</mi><mi>b</mi></msubsup>
+% というように、後の処理が前の結果を覆う形になり、TeXだけでは処理不可能（たぶん）
+% なので、コンバーターに任せる。
+% これらはsubflag、supflagを兄弟の中で前のノードにくっつける処理を行う。
+% コンバーターはsubflagまたはsupflagが見つかった場合、次のノードを確認し、そのノードにも
+% supflagまたはsubflagが見つかった場合は、その次のノードまでをmsupなどに入れる。
+% msub系になるか、munder系になるかは、muoflagがonかどうかで判断する。onのとき、munder系にする。
+%
+% subflag,supflagについて同じフラグが連続して見つかった場合はエラーである。
+% 引数はとりあえずmfragで囲っておき、展開するかmrowにするかはコンバーターに任せる。
+%
+
+
+\newcommand{\sp}[1]{\setsAttr{supflag}{on}\mfrag{#1}}
+\newcommand{\sb}[1]{\setsAttr{subflag}{on}\mfrag{#1}}
+
+\newcommand{\mathop}[1]{\@mathgroup o{\@underoverflag#1}}
+\newcommand{\mathbin}[1]{\@mathgroup o{#1}}
+\newcommand{\mathnum}[1]{\@mathgroup n{#1}}
+\newcommand{\mathi}[1]{\@mathgroup i{#1}}
+\newcommand{\text}[1]{\@mathgroup t{#1}}
+
+\newcommand{\@operatorname}[2]{%
+  \ifx#1*%大型演算子
+  \@mathgroup i{\@underoverflag #2}\else%
+  \@mathgroup i{#2}\fi%
+}
+\newcommand{\operatorname}{%
+  \@ifnextchar*{\@operatorname}{\@operatorname f}}
+
+\newcommand{\mfenced}[2][]{%
+   \box{mfenced}{\setAttrs{#1}\mfrag{#2}}}
+\newcommand{\left}[1]{%
+    \createElement{mfenced}\ifx#1. \setAttr{open}{}\else\setAttr{open}{#1}\fi%
+    \createElement{mfrag}}
+\newcommand{\right}[1]{%\left\rightでつかうこと
+  \hclimb\ifx#1. \setcAttr{close}{}\else\setcAttr{close}{#1}\fi\hclimb}
+%mmultiscripts
+% #4  #5
+%   #1
+% #2  #3
+\newcommand{\multiscripts}[5]{%
+  \box{mmultiscripts}{%
+    \mfrag{#1}%
+    \mfrag{#3}%
+    \mfrag{#5}%
+    \createNode[block]{mprescripts}%
+    \mfrag{#2}%
+    \mfrag{#4}%
+  }%
+}
+\newcommand{\noneNode}{\createNode{none}}
+\newcommand{\skipnext}[1]{}
+\newcommand{\sideset}[3]{%
+  \ifxusefirst\sb{#1}%
+    \ifxusefirst\sb{#2}%両方とも下付
+      \multiscripts{#3}{\skipnext#1}{\skipnext#2}%
+        {\createNode{none}}{\noneNode}\else%
+      \ifxusefirst\sp{#2}%二つ目は上付き
+        \multiscripts{#3}{\skipnext#1}{\noneNode}%
+          {\createNode{none}}{\skipnext#2}\else%
+        %何もついていない場合は上付きと扱う（'のため。）
+        \multiscripts{#3}{\skipnext#1}{\createNode{none}}%
+          {\createNode{none}}{#2}%
+      \fi%
+    \fi%
+  \else%左は上付き
+    \ifxusefirst\sp{#1}%かつ、^か\spかで始まる
+      \ifxusefirst\sb{#2}%右は下付
+        \multiscripts{#3}{\createNode{none}}{\skipnext#2}%
+          {\skipnext#1}{\createNode{none}}\else%以下右も上付き
+        \ifxusefirst\sp{#2}%\spあり
+          \multiscripts{#3}{\createNode{none}}{\createNode{none}}%
+            {\skipnext#1}{\skipnext#2}\else%
+          \multiscripts{#3}{\createNode{none}}{\createNode{none}}%
+            {\skipnext#1}{#2}%
+        \fi%
+      \fi%
+    \else%何もついていない場合は上付き
+      \ifxusefirst\sb{#2}%右は下付
+        \multiscripts{#3}{\createNode{none}}{\skipnext#2}%
+          {#1}{\createNode{none}}\else%以下右も上付き
+        \ifxusefirst\sp{#2}%\spあり
+          \multiscripts{#3}{\createNode{none}}{\createNode{none}}%
+            {#1}{\skipnext#2}\else%
+          \multiscripts{#3}{\createNode{none}}{\createNode{none}}%
+            {#1}{#2}%
+        \fi%
+      \fi%
+    \fi%
+  \fi%
+}
+
+
+\newcommand{\over}[2][]{%
+  \box{mover}{%
+    \setAttrs{#1}%
+    \mfrag{#2}}}
+\newcommand{\under}[2][]{%
+  \box{munder}{%
+    \setAttrs{#1}%
+    \mfrag{#2}}}
+
+\newcommand{\frac}[3][]{%
+  \box{mfrac}{%
+  \setAttrs{#1}%
+  \mfrag{#2}\mfrag{#3}
+}}
+%sqrtに対して属性を設定したいときはsetsAttrを利用してください。
+%ちょうどいい解決策がなかった
+\newcommand{\sqrt}[2][]{%
+  \ifempty{#1}\box{msqrt}{\mfrag{#2}}\else%
+  \box{mroot}{\mfrag{#2}\mfrag{#1}}\fi}
+
+\newcommand{\enclose}[3][]{%
+  \box{menclose}{%
+  \setAttrs{#1}%
+  \setAttr{notation}{#2}%
+  #3}}
+
+ \newcommand{\roundedbox}[2][]{%
+   \enclose[#1]{roundedbox}{#2}}
+\newcommand{\circle}[2][]{\enclose[#1]{circle}{#2}}
+\newcommand{\statusline}[2][]{%
+  \box{maction}{\setAttrs{#1}\setAttr{actiontype}{statusline}#2}}
+\newcommand{\toggleaction}[2][]{%
+  \box{maction}{\setAttrs{#1}\setAttr{actiontype}{toggle}#2}}
+
+
+\newcommand{\cancel}[2][u]{%
+  \ifx d#1\enclose{downdiagonalstrike}{#2} \else%
+  \ifx v#1\enclose{verticalstrike}{#2} \else%
+  \ifx h#1\enclose{horizontalstrike}{#2} \else %
+  \enclose{updiagonalstrike}{#2} \fi\fi\fi}
+
+
+\newenvironment{array}[2][]{%
+  \tagname{mtable}%
+  \setAttrs{#1}%
+  \let\array@columnalign\trim%
+  \def\tabular@alignment@right@cell{\defstr\array@columnalign{\array@columnalign  right}}%
+  \def\tabular@alignment@left@cell{\defstr\array@columnalign{\array@columnalign  left}}%
+  \def\tabular@alignment@center@cell{\defstr\array@columnalign{\array@columnalign  center}}%
+  \newlist\tabular@cell@startLIST%
+  \newlist\tabular@cell@betweenLIST%
+  \push\tabular@cell@startLIST{}%0番を潰す為に空の要素を入れておく
+  \def\rowend{}%
+  \def\rowbegin{}%
+  \def\cellbetween{}%
+  \def\cellbegin{}%
+  \setcounter{tabular@imp@counter}{0}%
+  \@tfor\tabular@imp@memory:=#2\do{\tabular@init\tabular@imp@memory}%
+  \@foreach\tabular@imp:=\tabular@cell@startLIST\do{%
+    \tabular@imp}%
+  \expandafter\ifempty\expandafter{\array@columnalign}\else%
+  \setAttr{columnalign}{\array@columnalign}\fi%
+  \begin{basearray}%
+  \setprop{cellname}{mtd}%
+  \setprop{rowname}{mtr}%
+  }{\end{basearray}}
+
+\newenvironment{eqnarray*}[1][]{%
+  \[%
+  \setAttrs{#1}%
+  \begin{array}{lcr}%
+}{\end{array}\]}
+    
+
+%数式番号が必要な場合は行を表すmlabeledtrの先頭に式番号を表す要素を追加する必要がある。
+%しかし、\nonumberは大概最後に書かれるので、最初の時点で必要かどうかわからない。
+%だが、TeX側のDOM操作を複雑にはしたくないので、やはりコンバーターに任すことにする
+%よって、式番号はmeqnumという要素を作成し、その中に記述し、行（mlabeledtrfrag)にeqfrag=tという属性をつける。
+%eqfragがtでない場合、meqnumは無視される。
+
+%0でないチャプターがあるときはチャプター番号:セクション番号-セクション内での式番号
+\newcounter{eqnumber}[section]
+\renewcommand{\theeqnumber}{(%
+  \ifnum\value{chapter}>0 \arabic{chapter}:\fi\ifnum\value{section}>0 \arabic{section}-\fi\arabic{eqnumber})}
+\newcommand{\@makeeqnumber}{%
+  \expandafter\ifx\@eqnumber@flag t%
+%  \stepcounter{eqnumber}%
+  \fi%
+    &\cellprop{cellname}{meqnum}\expandafter\ifx\@eqnumber@flag t\text\theeqnumber\fi}
+
+\newenvironment{eqnarray}[1][]{%
+  \[%
+  \setAttrs{#1}%
+  
+  \def\@eqnumber@flag{t}
+  \def\nonumber{%\nonumberの設定
+    \def\@eqnumber@flag{f}%フラグをoffに
+    \addcounter{eqnumber}{-1}%カウンターの値を減らす
+  }%
+
+  %basearray setting
+  \def\rowbegin{%
+    \def\@eqnumber@flag{t}%フラグをオンに
+    \stepcounter{eqnumber}%カウンターを増やす
+    \labelable{\arabic{eqnumber}}%ラベルの設定
+  }%
+  \def\rowend{\@makeeqnumber}%
+
+  %begin basearray
+  \begin{basearray}%
+    \tagname{mtable}%
+    \setcAttr{columnalign}{right center left}%
+    \setprop{rowname}{mlabeledtr}%
+    \setprop{cellname}{mtd}%
+}{\\\addcounter{eqnumber}{-1}\end{basearray}\]}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%Math Escape%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 文字参照の定義。足りない物があったらここで定義する。
+% もちろん、\mathescapeをつかって適宜定義してもいい。
+
+\bgroup%\mをグローバルに登録しない為と文字コードの変更を残さない為
+%&と#を普通の文字に変更
+\catcode `\&=12
+\catcode `\#=12
+%\global\mathescapeを書くのが面倒くさいので、mを定義。
+\def\m{\global\mathescape}
+% \mathescape \name 置換文字列,[iontIONT]
+% i=mi,o=mo,n=mn,t=mtext
+% 大文字は\sum^1 とかの^1が横ではなく、上につく様になる
+% 小文字だと横につく。
+
+%%%%%%%%%%%ギリシャ文字%%%%%%%%%%%%%
+\m\alpha &#945;,i\m\beta &#946;,i
+\m\gamma &#947;,i\m\delta &#948;,i
+\m\epsilon &#949;,i\m\zeta &#950;,i
+\m\eta &#951;,i\m\theta &#952;,i
+\m\iota &#953;,i\m\kappa &#954;,i
+\m\lambda &#955;,i\m\mu &#956;,i
+\m\nu &#957;,i\m\xi &#958;,i
+\m\omicron &#959;,i\m\pi &#960;,i
+\m\rho &#961;,i\m\sigma &#963;,i
+\m\tau &#964;,i\m\upsilon &#965;,i
+\m\phi &#966;,i\m\chi &#967;,i
+\m\psi &#968;,i\m\omega &#969;,i
+\m\sigmaf &#962;,i\m\Alpha &#913;,i
+\m\Beta &#914;,i\m\Gamma &#915;,i
+\m\Delta &#916;,i\m\Epsilon &#917;,i
+\m\Zeta &#918;,i\m\Eta &#919;,i
+\m\Theta &#920;,i\m\Iota &#921;,i
+\m\Kappa &#922;,i\m\Lambda &#923;,i
+\m\Mu &#924;,i\m\Nu &#925;,i
+\m\Xi &#926;,i\m\Omicron &#927;,i
+\m\Pi &#928;,i\m\Rho &#929;,i
+\m\Sigma &#931;,i\m\Tau &#932;,i
+\m\Upsilon &#933;,i\m\Phi &#934;,i
+\m\Chi &#935;,i\m\Psi &#936;,i
+\m\Omega &#937;,i
+%%%%%%%%%% ギリシャ文字終了
+
+%以下からは、http://www.hinet.mydns.jp/?TeX_mathml.rbを参考にしました。
+%%Σ等上にsb,spがつく記号
+\m\sum &sum;,O
+\m\prod &prod;,O
+\m\coprod &coprod;,O
+\m\bigcap &bigcap;,O
+\m\bigcup &bigcup;,O
+\m\bigsqcup &bigsqcup;,O
+\m\bigvee &bigvee;,O
+\m\bigwedge &bigwedge;,O
+\m\bigodot &bigodot;,O
+\m\bigotimes &bigotimes;,O
+\m\bigoplus &bigoplus;,O
+\m\biguplus &biguplus;,O
+
+%%記号
+\m\aleph &aleph;,a
+\m\imath &imath;,a
+\m\jmath &jmath;,a
+\m\ell &ell;,o
+\m\wp &wp;,o
+\m\Re &Re;,a
+\m\emptyset &empty;,a
+\m\flat &flat;,o
+\m\natural &natural;,o
+\m\sharp &sharp;,o
+\m\spadesuit &spadesuit;,o
+\m\Diamond &Diamond;,o
+\m\triangle &triangle;,o
+\m\clubsuit &clubsuit;,o
+\m\diamondsuit &diamondsuit;,o
+\m\heartsuit &heartsuit;,o
+\m\Im &Im;,a
+\m\mho &mho;,o
+\m\angle &angle;,o
+\m\hbar &hslash;,a
+\m\Box &square;,o
+\m\infty &infin;,n
+
+%%%%通常の演算子%%%%%%%%%%%%%
+\m\dots &mldr;,o
+\m\ldots &mldr;,o
+\m\cdots &ctdot;,o
+\m\surd &Sqrt;,o
+\m\partial &part;,o
+\m\exists &exist;,o
+\m\nexists &nexists;,o
+\m\gtreqqless &gtreqqless;,o
+\m\geqq &geqq;,o
+\m\leqq &leqq;,o
+\m\neg &not;,o
+\m\lhd &vltri;,o
+\m\rhd &vrtri;,o
+\m\unlhd &ltrie;,o
+\m\unrhd &rtrie;,o
+\m\neq &ne;,o
+\m\cdot &sdot;,o
+\m\amalg &amalg;,o
+\m\circ &cir;,o
+\m\asymp &asymp;,o
+\m\preceq &prcue;,o
+\m\leadsto &zigrarr;,o
+\m\to &rightarrow;,o
+\m\int &int;,o
+\m\oint &oint;,o
+\m\pm &pm;,o
+\m\prime &prime;,o
+\m\nabla &nabla;,a
+\m\top &top;,o
+\m\bot &bot;,o
+\m\forall &forall;,o
+\m\vdash &vdash;,o
+\m\dashv &dashv;,o
+\m\mp &mp;,o
+\m\times &times;,o
+\m\div &div;,o
+\m\ast &ast;,o
+\m\star &star;,o
+\m\dagger &dagger;,o
+\m\ddagger &ddagger;,o
+\m\cap &cap;,o
+\m\cup &cup;,o
+\m\uplus &uplus;,o
+\m\sqcap &sqcap;,o
+\m\sqcup &sqcup;,o
+\m\vee &vee;,o
+\m\wedge &wedge;,o
+\m\setminus &setminus;,o
+\m\wr &wr;,o
+\m\bullet &bullet;,o
+\m\diamond &diamond;,o
+\m\oslash &oslash;,o
+\m\odot &odot;,o
+\m\bigcirc &bigcirc;,o
+\m\bigtriangleup &bigtriangleup;,o
+\m\bigtriangledown &bigtriangledown;,o
+\m\triangleleft &triangleleft;,o
+\m\triangleright &triangleright;,o
+\m\oplus &oplus;,o
+\m\ominus &ominus;,o
+\m\otimes &otimes;,o
+\m\le &le;,o
+\m\leq &leq;,o
+\m\ge &ge;,o
+\m\geq &geq;,o
+\m\sim &sim;,o
+\m\ll &ll;,o
+\m\gg &gg;,o
+\m\doteq &doteq;,o
+\m\simeq &simeq;,o
+\m\subset &subset;,o
+\m\supset &supset;,o
+\m\approx &approx;,o
+\m\subseteq &subseteq;,o
+\m\supseteq &supseteq;,o
+\m\cong &cong;,o
+\m\smile &smile;,o
+\m\sqsubset &sqsubset;,o
+\m\sqsupset &sqsupset;,o
+\m\equiv &equiv;,o
+\m\frown &frown;,o
+\m\sqsubseteq &sqsubseteq;,o
+\m\sqsupseteq &sqsupseteq;,o
+\m\propto &propto;,o
+\m\bowtie &bowtie;,o
+\m\in &in;,o
+\m\ni &ni;,o
+\m\prec &prec;,o
+\m\succ &succ;,o
+\m\succeq &sccue;,o
+\m\models &models;,o
+\m\perp &perp;,o
+\m\parallel &parallel;,o
+\m\mid &mid;,o
+
+%%矢印%%%%%%%%%%%%%%%
+\m\rightarrow &rightarrow;,o
+\m\leftarrow &leftarrow;,o
+\m\uparrow &uparrow;,o
+\m\downarrow &downarrow;,o
+\m\longrightarrow &longrightarrow;,o
+\m\longleftarrow &longleftarrow;,o
+\m\Rightarrow &Rightarrow;,o
+\m\Leftarrow &Leftarrow;,o
+\m\Uparrow &Uparrow;,o
+\m\Downarrow &Downarrow;,o
+\m\Longrightarrow &Longrightarrow;,o
+\m\Longleftarrow &Longleftarrow;,o
+\m\leftrightarrow &leftrightarrow;,o
+\m\longleftrightarrow &longleftrightarrow;,o
+\m\Leftrightarrow &Leftrightarrow;,o
+\m\Longleftrightarrow &Longleftrightarrow;,o
+\m\updownarrow &updownarrow;,o
+\m\Updownarrow &Updownarrow;,o
+\m\mapsto &mapsto;,o
+\m\longmapsto &mapsto;,o
+\m\hookrightarrow &hookrightarrow;,o
+\m\hookleftarrow &hookleftarrow;,o
+\m\rightharpoonup &rightharpoonup;,o
+\m\leftharpoonup &leftharpoonup;,o
+\m\rightharpoondown &rightharpoondown;,o
+\m\leftharpoondown &leftharpoondown;,o
+\m\rightleftharpoons &rightleftharpoons;,o
+\m\nearrow &nearrow;,o
+\m\searrow &searrow;,o
+\m\swarrow &swarrow;,o
+\m\nwarrow &nwarrow;,o
+
+\m\arccos arccos,i
+\m\ker ker,i
+\m\arcsin arcsin,i
+\m\cos cos,i
+\m\cosh cosh,i
+\m\csc csc,i
+\m\min min,i
+\m\deg deg,i
+\m\exp exp,i
+\m\sinh sinh,i
+\m\gcd gcd,i
+\m\lg lg,i
+\m\ln ln,i
+\m\Pr Pr,i
+\m\arctan arctan,i
+\m\cot cot,i
+\m\det det,i
+\m\hom hom,i
+\m\log log,i
+\m\sec sec,i
+\m\tan tan,i
+\m\arg arg,i
+\m\coth coth,i
+\m\dim dim,i
+\m\max max,i
+\m\sin sin,i
+\m\tanh tanh,i
+
+\m\sup sup,I
+\m\lim lim,I
+\m\inf inf,I
+\m\limsup lim sup,I
+\m\liminf lim inf,I
+
+\m\colon:,i
+\egroup
+%eof

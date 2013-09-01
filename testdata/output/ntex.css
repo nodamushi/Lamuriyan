@@ -1,0 +1,285 @@
+.boldweight{
+    font-weight:bold;
+}
+
+.largesize{
+    font-size:1.7em;
+    line-height:2em;
+}
+
+
+
+p{
+    line-height:1.5em;
+    padding:0;
+    margin:0;
+    text-indent:1em;
+
+}
+html{
+    background-color:#333;
+}
+#mainbody{
+    width:800px;
+    background-color:#fff;
+    margin:20px auto 100px auto;
+    padding:50px 1em 50px 3em;
+}
+.sect{
+    margin-top:3em;
+    border-right:3px solid #AD5D70;
+    border-bottom:1px dotted #E3C9F2;
+    padding-right:2em;
+    padding-bottom:1em;
+}
+.sect p{
+    padding:0 1em 0 1em;
+}
+.sect header{
+    color:#9B4A4A;
+    border:2px solid #D34C8B;
+    padding:5px 0 5px 1em;
+    margin-bottom:20px;
+}
+.sect header h1{
+    margin:0;
+    paddin:0;
+}
+
+.sssect,.ssect{
+    margin-top:2em;
+}
+.ssect header{
+    border:0;
+    border-bottom:1px solid #5AAD4E;
+}
+
+h1 .secnumber{
+    margin:0 1em 0 0;
+    color:#ff3399;
+}
+
+.abstract{
+    border-right:3px solid #C18DE0;
+    border-bottom:1px dotted #E3C9F2;
+    padding-right:2em;
+    padding-bottom:1em;
+}
+
+.abstract header{
+    text-align:right;
+    color:#74458E;
+    border-bottom:1px solid #74458E;
+    padding:0;
+    margin-bottom:1em;
+}
+.abstract header h1{
+    font-weight:normal;
+    margin:0;
+    paddin:0;
+}
+
+pre{
+    width:80%;
+    margin:10px auto 10px auto;
+    border:1px solid #868BBA;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: auto;
+    padding:1em;
+}
+
+
+table{
+    margin:2em 1em 2em 1em;
+    border-collapse: collapse;
+}
+td,th{
+    padding:0.5em 1em 0.5em 1em;
+}
+.sect td p{
+    margin:0;
+    padding:0;
+}
+
+tr.bordertop{
+    border-top:1px solid black;
+}
+
+tr.borderbottom{
+    border-bottom:1px solid black;
+}
+
+td.borderleft,th.borderleft{
+    border-left:1px solid black;
+}
+
+table td.borderright,th.borderleft{
+    border-right:1px solid black;
+}
+
+td.centeralign,th.centeralign{
+    text-align:center;
+}
+
+td.leftalign,th.leftalign{
+    text-align:left;
+}
+
+table td.rightalign,th.rightalign{
+    text-align:right;
+}
+th{
+    white-space:nowrap;
+}
+
+
+
+#pagetitle{
+    background-color:#b13;
+    color:white;
+    padding:5px 1em 5px 1em;
+    margin:0 0 3em 0;
+}
+#pagetitle h1{
+    padding:0;
+    margin:0;
+}
+
+
+
+/******:syntax hilight*********/
+.codetohtml{
+    width:85%;
+    display:block;
+    border:solid 2px black;
+    background-color:#333;
+    margin:10px auto 10px auto;
+}
+.code-ol{
+    background-color:gray;
+    margin:0 0 0 3em;
+    padding-left:5px;
+    color:red;
+}
+
+.code-ol li{
+    background-color:#333;
+    list-style-type:decimal !important;
+    padding-left:2em;
+    text-indent:-1em;
+    line-height:1.3em;
+    color:white;
+}
+
+li.code-li-even{
+    background-color:#444;
+}
+
+/*特に変哲も無いトークン*/
+.plain-token{
+    color:#ccc;
+}
+
+/*演算子*/
+.operator-token{
+    color:#ccc;
+}
+
+
+/*html hilight*/
+/*<!doctype>*/
+.doctype-token{
+    color:burlywood;
+}
+
+.docstring-token{
+    color:hotpink;
+}
+
+/*普通のタグの<>*/
+.tag-token{
+    color:steelblue
+}
+
+/*<ol href=>とかのol*/
+.tagname-token{
+    color:darkmagenta;
+    font-weight:bold;
+}
+/*属性名*/
+.attribute-token{
+    color:darkolivegreen
+}
+/*id*/
+.tagid-token{
+    color:olivedrab
+}
+/*class*/
+.tagclass-token{
+    color:olive
+}
+/*style*/
+.tagstyle-token{
+    color:olive
+}
+/*属性の値*/
+.attributevalue-token{
+    color:firebrick;
+}
+
+
+/*各言語において、文字列と判断される部分*/
+.string-token{
+    color:orangered;
+}
+/*各言語において、コメントとなるトークン*/
+.comment-token{
+    color:forestgreen;
+    
+}
+
+/*各言語において、if等のキーワードとなるトークン*/
+.keyword-token{
+    color:#dc414d;
+    font-weight:bold;
+}
+
+/*JavaScriptのfunction*/
+.function-token{
+    color:green;
+    font-weight:bold;
+}
+/*JavaScriptの正規表現*/
+.reg-token{
+    color:#cc7328;
+}
+
+/*言語において()に意味がある場合は()を表す*/
+.parentheses-token{
+    color:#df2ac6;
+    padding-left:3px;
+    padding-right:3px;
+}
+/*言語において{}に意味がある場合は{}を表す*/
+.block-token{
+    color:#964;
+    font-weight:bold;
+}
+
+/*言語においてreturnが存在する場合はreturnを表す*/
+.return-token{
+    color:#a48;
+    font-weight:bold;
+}
+
+/*texの\relaxのようなコマンド*/
+.texcs-token{
+    color:#5c5;
+}
+
+/*texの#1のような引数*/
+.texarg-token{
+    color:hotpink;
+}
+}

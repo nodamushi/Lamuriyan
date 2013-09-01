@@ -1,0 +1,339 @@
+%このファイルを編集することでファイルを読み込む前のパーサーの状態を
+%設定することが出来ます。nodamushiの変なお遊びとか、
+%迷走している様子が大量に残っています
+
+%\indexitem depth number content type
+\newcommand{\indexitem}[4]{%
+  \bgroup%
+  \disableparagraph%
+%  \settingmarkg\@indexitem@memory%
+   \settingmark\@indexitem@memory%
+   \bgroup
+   \box{ignore}{#3}%
+   \egroup%
+  \lastsiblingmark\@indexitem@lastsibmemory%
+  \@indexitem\@indexitem@memory{#1}{#2}\@indexitem@lastsibmemory{#4}%
+%  \settingnodeg\@indexitem@memory%
+  \settingnode\@indexitem@memory%
+  \egroup%
+}
+\def\navtitle{目次}
+% \nav type depth scope     \nav{chapter,section}{1-3}{allまたはhere}の様に記述する。
+% typeは目次に表示するindexitemのtypeの種類を,区切りで指定する。上の例ではchapterとsectionを指定している。
+% depthは表示するchapterやsectionのdepthを表す。上の例ではdepth=1から3までを集めた目次を作成する。
+% chapterだけの目次を作りたい場合は0を、chpaterとsectionまでだったら0-1の様に設定する。
+% scopeはallの場合は、上の例では登録されているchapter,section全てのナビを作成する。
+% hereの場合、例えばchapterの次にnavが来た場合は、そのchapterの中に入るsectionだけを目次にする。
+% 同様にsectionの中でnavを作った場合は、そのsectionに入るsectionだけを目次にする。
+\newcommand{\nav}[3]{%
+  \createNode[b]{convertnav}%
+  \setAttr{type}{#1}%
+  \setAttr{depth}{#2}%
+  \setAttr{scope}{#3}%
+  \setAttr{title}{\navtitle}%
+  \indexitem 000{nav}}
+\newcommand{\chapternav}[1][1-3]{%
+  \nav{chapter,section}{#1}{here}}
+\newcommand{\documentnav}[1][0-1]{%
+  \nav{chapter,section}{#1}{all}}
+%\newcounter{catcodeimpcounter}%catcodeで使う
+\newlist\cssfiles
+\newcommand{\css}[2][]{%
+  \bgroup%
+  \let\oldparagraph\useparagraph%
+  \disableparagraph%
+  \box[rel=stylesheet,type=text/css]{link}{\setAttr{href}{#2}\setAttrs{#1}}%
+  \push\cssfiles{#1}%
+  \resetparagraph\oldparagraph%
+  \egroup}
+\newcommand{\charset}[1]{
+  \setgprop{charset}{#1}%
+  \box{meta}{\setAttr{content}{text/html;charset=#1}\setAttr{http-equiv}{Content-Type}}}
+  
+
+\newlist\jsfiles%
+\newcommand{\js}[2][]{%
+  \bgroup%
+  \let\oldparagraph\useparagraph%
+  \disableparagraph%
+  \box[type=text/javascript]{script}{\setAttrs{#1}\setAttr{src}{#2}  }%
+  \resetparagraph\oldparagraph%
+  \egroup}
+
+\def\articletitle{}
+\def\title#1{\defstr\articletitle{#1}}
+
+
+%%%% 環境定義%%%%%
+\newenvironment{div}{\tagname{div}}{}
+
+
+%環境のignoreプロパティは値がtrueの時、子要素を含めて
+%HTMLにコンバートしない。デフォルトではこの値はfalseである。
+\def\ignore{\setprop{ignore}{true}}
+
+
+\newverbenvironment{script}[1][type=text/javascript]{%
+  \tagname{script}%
+  \setAttrs{#1}%
+  \disableparagraph}{}
+
+%<header><h1>#1</h1></header>をつくる
+\def\createheader#1{%
+  \disableparagraph%
+  \box{header}{\box{h1}{#1}}%
+  \enableparagraph}
+
+\newcommand{\blockmarker}[2][]{\createNode[b]{block-#2}\setAttrs{#1}}
+
+\newverbenvironment{htmlcode}{%
+  \tagname{htmlcode}%
+  \notescapechar%
+  \disableparagraph}{}
+\newcommand{\inputhtml}[1]{%
+  \begin{text}\tagname{htmlcode}%
+    \disableparagraph\notescapechar%
+    \verbinput{#1}%
+  \end{text}}
+
+\newcommand{\a}[3][]{%
+  \inline[#1]{a}{\setAttr{href}{#2}#3}}
+
+\def\abstracttitle{概要}
+\newenvironment{abstract}{\tagname{section}%
+  \labelable{\abstracttitle}%
+  \setAttr{class}{abstract}%
+  \createheader\abstracttitle}{}
+\newif{\ifnowchapter}
+
+
+% 
+% デフォルトではnodamushiのホームページEGGw用に
+% chapterは別ページのarticleに変換されることを前提とした設定になっています
+% 
+\newcommand{\chapter}[2][]{%
+  \stepcounter{chapter}%
+  \nowchaptertrue%
+  \blockmarker{chapter}%
+  \setAttr{number}{第\thechapter章}%
+  \setAttr{title}{#2}%
+  \setAttr{idhash}{section}%
+  \ifempty{#1}\else%
+  \createIDfromeHashKey{#1}%
+  \fi%
+  \labelable{\thechapter}%
+  \indexitem 0\thechapter{#2}{chapter}%
+}
+  
+
+\newcommand{\@makesectitles}[2]{%
+  \inline[class=secnumber]{span}{#1}{#2}}
+\newcommand{\makesectiontitle}[1]{%
+  \@makesectitles{\thesection章}{#1}}
+
+\newcommand{\section}[2][]{%
+  \stepcounter{section}%
+  \blockmarker[class=sect]{section}%
+  \setAttr{idhash}{section}%
+  \ifempty{#1}\else%
+  \createIDfromeHashKey{#1}%
+  \fi%
+  \labelable{\thesection}%
+  \indexitem 1\thesection{#2}{section}%
+  \bgroup%
+  \settingmark\impmark@sect%
+  \createheader{\makesectiontitle{#2}}%
+  \settingnode\impmark@sect\egroup}
+
+\newcommand{\makesubsectiontitle}[1]{%
+  \@makesectitles{\thesubsection}{#1}}
+\newcommand{\subsection}[2][]{%
+  \stepcounter{subsection}%
+  \blockmarker[class=ssect]{subsection}%
+  \setAttr{idhash}{section}%
+  \ifempty{#1}\else%
+  \createIDfromeHashKey{#1}%
+  \fi%
+  \labelable{\thesubsection}%
+  \indexitem 2\thesubsection{#2}{section}%
+  \bgroup%
+  \settingmark\impmark@sect%
+  \createheader{\makesubsectiontitle{#2}}%
+  \settingnode\impmark@sect\egroup}
+
+\newcommand{\makesubsubsectiontitle}[1]{%
+  \@makesectitles\thesubsubsection{#1}}
+\newcommand{\subsubsection}[2][]{%
+  \stepcounter{subsubsection}%
+  \blockmarker[class=sssect]{subsubsection}%
+  \setAttr{idhash}{section}%
+  \ifempty{#1}\else%
+  \createIDfromeHashKey{#1}%
+  \fi%
+  \labelable{\thesubsubsection}%
+  \indexitem 3\thesubsubsection{#2}{section}%
+  \bgroup%
+  \settingmark\impmark@sect%
+  \createheader{\makesubsubsectiontitle{#2}}%
+  \settingnode\impmark@sect\egroup}
+
+\newcommand{\makesubsubsubsectiontitle}[1]{%
+  \@makesectitles\thesubsubsubsection{#1}}
+\newcommand{\subsubsubsection}[2][]{%
+  \stepcounter{subsubsubsection}%
+  \blockmarker[class=ssssect]{subsubsubsection}%
+  \setAttr{idhash}{section}%
+  \ifempty{#1}\else%
+  \createIDfromeHashKey{#1}%
+  \fi%
+  \labelable{\thesubsubsubsection}%
+  \indexitem 4\thesubsubsubsection{#2}{section}%
+  \bgroup%
+  \settingmark\impmark@sect%
+  \createheader{\makesubsubsubsectiontitle{#2}}%
+  \settingnode\impmark@sect\egroup}
+
+\def\chapterend{\blockmarker{end-chapter}\nowchapterfalse\setcounter{section}{-1}\stepcounter{section}}
+\def\sectionend{\blockmarker{end-section}}
+\def\subsectionend{\blockmarker{end-subsection}}
+\def\subsubsectionend{\blockmarker{end-subsubsection}}
+\def\subsubsubsectionend{\blockmarker{end-subsubsubsection}}
+
+
+\newcommand{\b}[2][]{\inline[#1]{b}{#2}}
+
+
+
+
+\def\alink#1#2{\inline{a}{\setAttr{href}{#1}#2}}
+
+% 引用環境
+% <cite>の始まりの文字列、終わりの文字列を変更したい場合は
+% \prequotecite,\postquoteciteを変更する
+\def\prequotecite{引用:}
+\def\postquotecite{}
+
+\def\@blockquote@makeurl#1{%
+  \prequotecite%
+  \ifx\@blockquote@url\undefined #1\else%
+  \alink{\@blockquote@url}{#1}%
+%  \inline[href=\@blockquote@url]{a}{#1}\fi%
+  \postquotecite}
+
+\def\@blockquote@makecite{%
+  \ifx \@blockquote@title\undefined \else%
+  \let\oldparagraph\useparagraph%
+  \disableparagraph%
+  \box{cite}{\@blockquote@makeurl\@blockquote@title}%
+  \resetparagraph\oldparagraph%  
+  \fi}
+
+\def\@blockquote@citeattr{%
+  \ifx\@blockquote@url\undefined \else%
+  \seteAttr{cite}{\@blockquote@url}%
+  \fi}
+
+\def\@blockquote@makecs#1#2{%
+  \expandafter\def\csname @blockquote@#1\endcsname{#2}}
+
+% \begin{quotatino}[url=http//~~~~,title=~~~~,position=tかb]
+%   positionは<cite>を最初に入れるか最後に入れるかの指定。
+%   tはtop、bはbottom　デフォルトはt
+\newenvironment{quotation}[1][]{%
+  \let\@blockquote@url\undefined%
+  \let\@blockquote@title\undefined%
+  \def\@blockquote@position{t}%
+  \tagname{blockquote}%
+  \@for\@blockquote@temp:=#1\do{%
+    \expandafter\@divide@eq\@blockquote@temp\@vid\@blockquote@makecs}%
+  \@blockquote@citeattr%
+  \expandafter\ifx\@blockquote@position t \@blockquote@makecite\fi%
+  \bgroup% 
+}{\egroup \expandafter\ifx\@blockquote@position b \@blockquote@makecite\fi}
+
+
+%簡易記法の設定
+% ファイルの改行フックと、謎の行頭のみアクティブキャラクターにするマクロを使って、よくある
+% 行頭に+や-が来るとリストに変換する機能を実装
+% はてな記法とかよくあるのと同じように、+はenumerateに、-はitemizeに変換される。
+% +++とか複数付けると、それだけ階層を作れるのが一般的だけど、ちょっとそれを実装するのは面倒くさい…
+% 数を数えるところまでは出来るんだけどねぇ。コンバーターに頼らないと無理かと。
+\newcommand{\slnewlineA}[1]{\everynewline={\slnewlineB{#1}}}
+\newcommand{\slnewlineB}[1]{%
+  \end{#1}}
+\newcounter{slplus}
+\newcounter{slminus}
+\setcounter{slplus}{-100}
+\setcounter{slminus}{-100}
+\newcommand{\@slplus}{%
+  \stepcounter{slplus}\@simplelist{slplus}{enumerate}}
+\newcommand{\@slminus}{%
+  \stepcounter{slminus}\@simplelist{slminus}{itemize}}
+\newcommand{\@simplelist}[2]{%
+  \ifnum\value{#1}=\fileline \relax \else%
+  \setcounter{#1}{\fileline}\begin{#2}\onNLhook\fi%
+  \item\everynewline={\slnewlineA{#2}}}
+% \startlineactivecharは次の文字列はキャラクター、次はエスケープシーケンスです。
+\startlineactivechar +\@slplus
+\startlineactivechar -\@slminus
+
+% 簡易引用記法 行頭の>>から行頭の<<までをquotation環境に変換する
+% LaTeXだと、!と?の逆が出力されるみたいだけど、!`や?`を使えばいいし、いいよね？
+
+\newcommand{\@ltactive}[1]{%\elseにたどり着くまで怒濤の\expandafter祭り
+  \ifx >#1 \expandafter\begin\expandafter{%
+      \expandafter q\expandafter u\expandafter o\expandafter t%
+      \expandafter a\expandafter t\expandafter i\expandafter o\expandafter n%
+    \expandafter}\else>#1\fi}
+\newcommand{\@gtactive}[1]{%
+  \ifx <#1 \end{quotation}\else <#1\fi}
+\startlineactivechar >\@ltactive
+\startlineactivechar <\@gtactive
+
+\newcounter{figure}[section]
+\renewcommand{\thefigure}{%
+  \ifnum\value{chapter}>0 \arabic{chapter}:\fi%
+  \ifnum\value{section}>0 \arabic{section}-\fi\arabic{figure}%
+}
+
+\newcommand{\@caption}[2]{
+  \stepcounter{#1}%
+  \box{figcaption}{%
+    \expandafter\labelable\expandafter{\csname the#1\endcsname}%
+    \@makecaption{#1}{\csname the#1\endcsname}{#2}}%
+}
+
+\newcommand{\@makecaption}[3]{%
+  \csname capname@#1\endcsname#2\csname capseparator@#1\endcsname#3}
+
+
+\def\@zoomstyle#1#2{zoom:#1;-moz-transform-origin:0 0;-moz-transform:scale(#1);}%#1:0.5など小数表記、#2:50%など%表記
+\def\capname@figure{図}
+\def\capseparator@figure{:　}
+\newenvironment{figure}{%
+  \tagname{figcaption}%
+  \disableparagraph%
+  \setAttr{class}{figfigure}%
+  \def\caption{\@caption{figure}}%
+}{}
+\def\linewidth{100\%}
+\newcommand{\includegraphics}[2][]{%
+  \inline[\@imagestyle{#1}{#2}]{img}{\setAttr{src}{#2}}%TODO ファイルの検索、rootdocumentに使ったファイルとして保存
+}
+
+
+
+\def\capname@table{表}
+\def\capseparator@table{:　}
+\newcounter{table}[section]
+\newenvironment{table}{%
+  \tagname{figcaption}%
+  \setAttr{class}{tabfigure}%
+  \disableparagraph%
+  \def\caption{\@caption{table}}%
+}{}
+
+
+
+
+
