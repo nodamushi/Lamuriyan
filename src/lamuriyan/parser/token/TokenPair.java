@@ -1,9 +1,14 @@
 package lamuriyan.parser.token;
 
-
+/**
+ * MacroのDFAの入力で使う
+ * @author nodamushi
+ *
+ */
 public class TokenPair{
     private Token a,b;
-    public TokenPair(Token before,Token after){
+    
+    void init(Token before,Token after){
         a = before;b = after;
     }
     

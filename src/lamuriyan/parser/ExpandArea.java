@@ -532,6 +532,17 @@ public class ExpandArea implements CommandMap{
         }else if(o instanceof TokenChain){
             result.addAll((TokenChain)o);
             inputed = true;
+        }else if(o instanceof UserMacroProcess.MacroExpandData){
+            Object[] arg = ((UserMacroProcess.MacroExpandData) o).getData();
+            for(Object obj:arg){
+                if(obj instanceof TokenChain){
+                    result.addAll((TokenChain)obj);
+                }else if(obj instanceof Token){
+                    result.add((Token)obj);
+                }
+            }
+            inputed = true;
+            
         }else if(o instanceof Boolean){
             if(macro instanceof IFMacro){
                 boolean bb = (Boolean)o;

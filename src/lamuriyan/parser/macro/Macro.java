@@ -234,7 +234,7 @@ public class Macro{
         argsize = i;
         this.blockValue=blockvalue;
         if(blockValue!=null){
-            MacroBlockProcess m = new MacroBlockProcess(blockValue);
+            UserMacroProcess m = new UserMacroProcess(blockValue,argsize,name);
             m.setTeXMacro(this);
             this.func=m;
         }else
@@ -314,7 +314,7 @@ public class Macro{
         if(func==null && block==null)throw new RuntimeException("処理が定義されていない");
         if(block!=null){
             blockValue = block;
-            MacroBlockProcess m = new MacroBlockProcess(blockValue);
+            UserMacroProcess m = new UserMacroProcess(blockValue,argsize,name);
             m.setTeXMacro(this);
             this.func=m;
         }else{

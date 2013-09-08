@@ -156,7 +156,9 @@ public class TokenChain implements Iterable<Token>{
             boolean inited=false;
             int n=0;
             Token before;
-
+            
+            TokenPair pre=new TokenPair(),nextpair=new TokenPair();
+            
             @Override
             public TokenPair getPrePair(){
                 Token next;
@@ -165,7 +167,8 @@ public class TokenChain implements Iterable<Token>{
                 }else{
                     next = list.get(n);
                 }
-                return new TokenPair(before, next);
+                pre.init(before, next);
+                return pre;
             }
             
             private void init(){
@@ -190,9 +193,9 @@ public class TokenChain implements Iterable<Token>{
                     next = list.get(n);
                     n++;
                 }
-                TokenPair p = new TokenPair(before,next);
+                nextpair.init(before,next);
                 before = next;
-                return p;
+                return nextpair;
             }
 
             @Override
