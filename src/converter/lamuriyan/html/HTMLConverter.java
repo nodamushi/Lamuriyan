@@ -155,6 +155,9 @@ public class HTMLConverter{
         }
         rootdoc = requireNonNull(rootDocument,"RootDocument is null!");
         skip = setting.getSkipRules();
+        if(!skip.contains("skiptag")){
+            skip.add("skiptag");
+        }
         ignore = setting.getIgnoreRules();
     }
 
@@ -337,7 +340,7 @@ public class HTMLConverter{
         if(parent==null || putParent==null)return;
         for(LmNode n:parent.getChildren()){
             String tname = getHTMLTagName(n);
-            if(isIgnore(n)){
+            if(n.isIgnore()||isIgnore(n)){
                 continue;
             }
             

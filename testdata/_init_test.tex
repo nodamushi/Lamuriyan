@@ -9,7 +9,7 @@
 %  \settingmarkg\@indexitem@memory%
    \settingmark\@indexitem@memory%
    \bgroup
-   \box{ignore}{#3}%
+   \block{ignore}{#3}%
    \egroup%
   \lastsiblingmark\@indexitem@lastsibmemory%
   \@indexitem\@indexitem@memory{#1}{#2}\@indexitem@lastsibmemory{#4}%
@@ -42,13 +42,13 @@
   \bgroup%
   \let\oldparagraph\useparagraph%
   \disableparagraph%
-  \box[rel=stylesheet,type=text/css]{link}{\setAttr{href}{#2}\setAttrs{#1}}%
+  \block[rel=stylesheet,type=text/css]{link}{\setAttr{href}{#2}\setAttrs{#1}}%
   \push\cssfiles{#1}%
   \resetparagraph\oldparagraph%
   \egroup}
 \newcommand{\charset}[1]{
   \setgprop{charset}{#1}%
-  \box{meta}{\setAttr{content}{text/html;charset=#1}\setAttr{http-equiv}{Content-Type}}}
+  \block{meta}{\setAttr{content}{text/html;charset=#1}\setAttr{http-equiv}{Content-Type}}}
   
 
 \newlist\jsfiles%
@@ -56,7 +56,7 @@
   \bgroup%
   \let\oldparagraph\useparagraph%
   \disableparagraph%
-  \box[type=text/javascript]{script}{\setAttrs{#1}\setAttr{src}{#2}  }%
+  \block[type=text/javascript]{script}{\setAttrs{#1}\setAttr{src}{#2}  }%
   \resetparagraph\oldparagraph%
   \egroup}
 
@@ -81,7 +81,7 @@
 %<header><h1>#1</h1></header>をつくる
 \def\createheader#1{%
   \disableparagraph%
-  \box{header}{\box{h1}{#1}}%
+  \block{header}{\block{h1}{#1}}%
   \enableparagraph}
 
 \newcommand{\blockmarker}[2][]{\createNode[b]{block-#2}\setAttrs{#1}}
@@ -199,13 +199,14 @@
 \def\subsubsectionend{\blockmarker{end-subsubsection}}
 \def\subsubsubsectionend{\blockmarker{end-subsubsubsection}}
 
-
+%<b>
 \newcommand{\b}[2][]{\inline[#1]{b}{#2}}
-
-
-
-
-\def\alink#1#2{\inline{a}{\setAttr{href}{#1}#2}}
+%<a>
+%基本は\anchor
+%一応\aと\linkも定義
+\newcommand{\anchor}[3][]{\inline[#1]{a}{\setAttr{href}{#2}#3}}
+\let\a\anchor
+\let\link\anchor
 
 % 引用環境
 % <cite>の始まりの文字列、終わりの文字列を変更したい場合は
@@ -216,7 +217,7 @@
 \def\@blockquote@makeurl#1{%
   \prequotecite%
   \ifx\@blockquote@url\undefined #1\else%
-  \alink{\@blockquote@url}{#1}%
+  \anchor{\@blockquote@url}{#1}%
 %  \inline[href=\@blockquote@url]{a}{#1}\fi%
   \postquotecite}
 
@@ -224,7 +225,7 @@
   \ifx \@blockquote@title\undefined \else%
   \let\oldparagraph\useparagraph%
   \disableparagraph%
-  \box{cite}{\@blockquote@makeurl\@blockquote@title}%
+  \block{cite}{\@blockquote@makeurl\@blockquote@title}%
   \resetparagraph\oldparagraph%  
   \fi}
 
@@ -298,7 +299,7 @@
 
 \newcommand{\@caption}[2]{
   \stepcounter{#1}%
-  \box{figcaption}{%
+  \block{figcaption}{%
     \expandafter\labelable\expandafter{\csname the#1\endcsname}%
     \@makecaption{#1}{\csname the#1\endcsname}{#2}}%
 }

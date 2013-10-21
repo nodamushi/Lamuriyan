@@ -14,7 +14,7 @@ public class LmElement extends LmNode{
     
     private ArrayList<LmNode> nodelist = new ArrayList<>();
     protected boolean acceptDisplayNode=true;
-    
+    private boolean flagmentNode=false;
     
     
     public LmElement(String name){
@@ -28,11 +28,21 @@ public class LmElement extends LmNode{
     protected LmElement(LmElement e){
         super(e);
         acceptDisplayNode=e.acceptDisplayNode;
+        flagmentNode=e.flagmentNode;
         for(LmNode n:e.nodelist){
             n = n.clone();
             add(n);
         }
     }
+    
+    public boolean isFlagmentNode(){
+        return flagmentNode;
+    }
+    
+    public void setFlagmentNode(boolean b){
+        flagmentNode=b; 
+    }
+    
     /**
      * Environmentのclone用コンストラクタ用のコンストラクタ<br>
      * 子要素以外はディープコピー
@@ -60,7 +70,7 @@ public class LmElement extends LmNode{
      * @return
      */
     public boolean isAcceptDisplayNode(){
-        return !isInline()&&acceptDisplayNode;
+        return isFlagmentNode()||!isInline()&&acceptDisplayNode;
     }
     /**
      * このElementにディスプレイノードを入れることが出来るかどうかを設定します。<br>
@@ -90,7 +100,7 @@ public class LmElement extends LmNode{
     
     public boolean add(LmNode n){
         if(nodelist.contains(n))return false;
-        if(!acceptDisplayNode && !n.isInline())return false;
+        if(!isFlagmentNode()&&!acceptDisplayNode && !n.isInline())return false;
         nodelist.add(n);
         n.setParent(this);
         return true;

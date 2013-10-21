@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import lamuriyan.parser.*;
+import lamuriyan.parser.macro.BoxContainer;
 import lamuriyan.parser.node.LmAttr;
 import lamuriyan.parser.node.LmElement;
 import lamuriyan.parser.node.LmNode;
@@ -37,6 +38,12 @@ public abstract class Environment extends LmElement{
     protected Mode mode=Mode.PLAIN;
     protected LmElement current=this;
     protected LmNode settingNode = this;
+    //\boxで使うフラグです
+    //このフラグがonの時
+    protected boolean nextAddElementIsIgnore=false;
+    protected BoxContainer boxcontainer = null;
+    
+    
     
     public Environment(String name,LamuriyanEngine engine){
         super(name);
@@ -290,6 +297,19 @@ public abstract class Environment extends LmElement{
     }
     
     /**
+     * \boxで使うメソッドです。<br>
+     * 次に代入されるElementをignore属性にし、bcに保持させます。
+     * @param bc nullも可
+     * @return bcがnullの場合は新たに生成されたBoxContainer。そうでない場合はbc。
+     */
+    public BoxContainer setNextElementToBoxContainerFlag(BoxContainer bc){
+        if(bc == null)bc =new BoxContainer();
+        boxcontainer = bc;
+        nextAddElementIsIgnore=true;
+        return bc;
+    }
+    
+    /**
      * サブクラスがElementとしてのaddを使いたいときはこのメソッドを利用してください。
      * @param n
      */
@@ -321,18 +341,31 @@ public abstract class Environment extends LmElement{
      */
     public boolean add(LmNode n,boolean moveCurrent){
         if(n==null)return false;
-        if(!n.isInline() && !current.isAcceptDisplayNode()){
+        boolean isElement = (n instanceof LmElement) &&!(n instanceof Environment);
+        boolean notSkip=true;
+        if(nextAddElementIsIgnore && isElement){
+            LmElement e = (LmElement)n;
+            e.setIgnore(true);
+            boxcontainer.element = e;
+            boxcontainer =null;
+            nextAddElementIsIgnore = false;
+            //currentの変更処理をスキップする
+            notSkip=true;
+        }
+        
+        if(notSkip&&!n.isInline() && !current.isAcceptDisplayNode()){
             while(!current.isAcceptDisplayNode()){
                 setCurrent_Parent();
             }
         }
+        
         if(current == this){
             super.add(n);
         }else{
             current.add(n);
         }
         settingNode = n;
-        if(moveCurrent &&n instanceof LmElement && !(n instanceof Environment)){
+        if(moveCurrent && isElement){
             current = ((LmElement)n);
             currentChanged();
         }

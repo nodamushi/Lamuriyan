@@ -6,7 +6,7 @@ import java.util.*;
 
 import lamuriyan.parser.macro.*;
 import lamuriyan.parser.macro.Define_Macro.IFMacro;
-import lamuriyan.parser.macro.Define_Macro.TDef;
+import lamuriyan.parser.macro.Define_Macro.UseNotArgumentBlockMacro;
 import lamuriyan.parser.macro.Macro.MacroDFA;
 import lamuriyan.parser.node.env.Environment;
 import lamuriyan.parser.node.env.TextEnvironment;
@@ -599,13 +599,18 @@ public class ExpandArea implements CommandMap{
         }else if(o instanceof MathEscape){
             result.add( new Token((MathEscape)o));
             inputed = true;
-        }else if(o instanceof TDef){
-            engine.startTDefBlockMode(((TDef) o).name,dglobal);
+        }else if(o instanceof UseNotArgumentBlockMacro){
+            UseNotArgumentBlockMacro m = (UseNotArgumentBlockMacro)o;
+            usenotargumentblockIsAppendTokenToBlock=m.appendBlock;
+            if(m.macroName.equals("tdef"))
+                engine.startUseNotArgumentBlockMacroMode(m.action,(Boolean)dglobal);
+            else if(m.macroName.equals("hbox"))
+                engine.startUseNotArgumentBlockMacroMode(m.action,null);
         }
         return inputed;
     }
     
-    
+    private boolean usenotargumentblockIsAppendTokenToBlock;
     
     
     
@@ -666,8 +671,8 @@ public class ExpandArea implements CommandMap{
     private void pushTDefBlock(int blocktype){
         if(blocktype!=CHARBLCOK && blocktype!=COMMANDBLOCK )return;
         engine.pushNewCharCategoryBlock();
-        TDefBlock map = new TDefBlock(blocktype);
-        if(engine.setTDefBlock(map)){
+        NotArgumentBlock map = new NotArgumentBlock(blocktype,usenotargumentblockIsAppendTokenToBlock);
+        if(engine.setNotArgumentBlock(map)){
             cmstack.push(current);
             current = map;
         }else{

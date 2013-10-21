@@ -214,7 +214,7 @@ reflabel>nodamushi.ntex.html.RefLabelConverter:mlabeledtr,math\\[1.5em]
 \section{自作マクロについて}
 ここに書いてない機能については、自作マクロを作成するしかありません。
 
-数式モードでマクロは基本的には\verb+\boxと\mfragと\setAttr,\setAttrs+を駆使してDOMを生成していくことで作ります。
+数式モードでマクロは基本的には\verb+\blockと\mfragと\setAttr,\setAttrs+を駆使してDOMを生成していくことで作ります。
 
 これらは\nTeXにおける他のマクロの作り方（今度書く）と同様ですが、いくつか特殊なルールがあります。
 
@@ -241,6 +241,6 @@ MathMLにおいて、<mrow>は様々な場面で使われる。例えば、<msup
 \subsection{^_を上下につけるか横に付けるかを変更する}
 あるノードに対して^_の位置はそのノードに対して\verb+\@underoverflag+が呼ばれているかどうかで決まる。
 \begin{code}{tex}
-\box{nodename}{\@underoverflag 内容}
+\block{nodename}{\@underoverflag 内容}
 \end{code}
 の様に書くとこの<nodename>は上下に^_が付く。

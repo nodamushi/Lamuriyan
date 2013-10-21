@@ -35,6 +35,7 @@ public class LmNode{
     private NodeValueFactory fact;
     private boolean inline = true;
     private LmElement parent;
+    private boolean ignoreconvert = false;
     
     private LmID id;
     private HashMap<String, LmAttr> attrs = new HashMap<>();
@@ -95,6 +96,22 @@ public class LmNode{
     public LmNode clone(){
         return new LmNode(this);
     }
+    
+    /**
+     * Converterが無視するかどうかの設定です。<br>
+     * @param ignoreconvert 表示するかどうか
+     */
+    public void setIgnore(boolean b){
+        this.ignoreconvert = b;
+    }
+    
+    /**
+     * Converterが無視するかどうかの設定です。<br>
+     */
+    public boolean isIgnore(){
+        return ignoreconvert;
+    }
+    
     
     /**
      * このノードの親を設定します。

@@ -188,32 +188,45 @@ class GlobalCommandMap implements CommandMap{
 //\tdef直後の{}専用のブロック
 //ブロックが終了した直後のpoppedメソッドにてengineにcommandname名の
 //トークン列を保存する要求をする
-class TDefBlock extends BlockCommandMap{
+class NotArgumentBlock extends BlockCommandMap{
 
+    private Object option;
     private String commandname;
+    private PopedAction action;
     private TokenChain tc = new TokenChain();
-    private boolean global;
+    private boolean appendToThisBlock;
     
-    public TDefBlock(int type){
+    public NotArgumentBlock(int type,boolean appendToThisBlock){
         super(type);
+        this.appendToThisBlock=appendToThisBlock;
     }
     
-    public void setName(String name){
-        commandname = name;
+    public boolean isAppendToThisBlock(){
+        return appendToThisBlock;
     }
     
-    public void setGlobal(boolean b){
-        global = b;
+//    public void setName(String name){
+//        commandname = name;
+//    }
+    
+    public void setAction(PopedAction action){
+        this.action=action;
+    }
+    public void setOption(Object option){
+        this.option = option;
     }
     
     @Override
     public void popped(LamuriyanEngine engine){
         engine.endTDefBlockMode(this);
-        Command c = new Command(commandname, tc);
-        if(global)
-            engine.defineGlobalCommand(c);
-        else
-            engine.defineCommand(c);
+        if(action!=null){
+            action.poped(engine, option,tc);
+        }
+//        Command c = new Command(commandname, tc);
+//        if(global)
+//            engine.defineGlobalCommand(c);
+//        else
+//            engine.defineCommand(c);
     }
     
     public void appendToken(Token t){

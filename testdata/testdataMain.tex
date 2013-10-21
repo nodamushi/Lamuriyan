@@ -7,8 +7,8 @@
 
 \begin{head}
 %  \charset{utf-8}
-%  \box{title}{Lamuriyan仮本部}
-  \box{meta}{\setAttr{content}{noarchive,noindex,nofollow}\setAttr{name}{robots}}
+%  \block{title}{Lamuriyan仮本部}
+  \block{meta}{\setAttr{content}{noarchive,noindex,nofollow}\setAttr{name}{robots}}
   \js{http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML}
   \css{ntex.css}
 
@@ -31,10 +31,9 @@
 
   自分のHPやブログの記事を\TeXで管理したいな、と思ったことはありませんか？\TeXだったら数式を簡単にかけるのにな。\TeXだったら図1とかの番号を特に考えなくても勝手に管理してくれるのにな。でも、今ある\TeXからHTMLを生成するツールで、思いのままにスタイリッシュなサイトを生成するのは力不足感が否めない。たとえば、\verb+\ref+でページ内リンクを張りつつ、chapter単位で別ページに切り出したい、という場合、生成されたHTMLを元手に分離作業をするのでは修正が大変ですね。HTMLになるまえのDOMオブジェクトの状態で結果を出力して欲しい。そういうnodamushiの要望に応える為に\Lamuriyanは作られました。
 
-  \nTeXとは、\TeXライクな文法で、ファイル変換するとHTMLのDOMを生成するJavaで作成されたプログラムです。GitHubで公開しています。\alink{https://github.com/nodamushi/nTeXforHTML}{ nodamushi / nTeXforHTML}\\[3em]
+  \nTeXとは、\TeXライクな文法で、ファイル変換するとHTMLのDOMを生成するJavaで作成されたプログラムです。GitHubで公開しています。\anchor{https://github.com/nodamushi/nTeXforHTML}{ nodamushi / nTeXforHTML}\\[3em]
 
   \nTeXは\TeXライクな文法なので、当然マクロが使えます。
-
 \begin{code}{tex}
 \def\foolish #1様は超絶かっこいい{#1は悲しいほど馬鹿}
 \foolish nodamushi様は超絶かっこいい
@@ -67,7 +66,9 @@ Person.prototype.getName=function(){
 var p = new Person("nodamushi");
 \end{code}
 
+
 あなたも、\Lamuriyanを用いてページを生成してみませんか？
+
 
 \end{abstract}
 
@@ -76,9 +77,9 @@ var p = new Person("nodamushi");
 
 \input{aboutLamuriyan.tex}
 \input{aboutText.tex}
+\input{aboutDOM.tex}
 \input{aboutMacro.tex}
 \input{aboutMath.tex}
-
 
 
 

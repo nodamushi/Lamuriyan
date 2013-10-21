@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import lamuriyan.parser.*;
 import lamuriyan.parser.ExpandArea.ExpandAfter;
+import lamuriyan.parser.PopedAction;
 import lamuriyan.parser.io.LamuriyanFileUtilities;
 import lamuriyan.parser.label.Label;
 import lamuriyan.parser.label.RefTarget;
@@ -1001,6 +1002,29 @@ public class Define_Macro{
             }
         });
         
+        def("\\hbox", "", new MacroProcess(){
+            
+            @Override
+            protected Object _run(LamuriyanEngine engine ,List<Token> args)
+                    throws Exception{
+                final LmElement current = engine.getCurrentEnvironment().getCurrentElement();
+                final LmNode settingNode = engine.getCurrentEnvironment().getSettingTargetNode();
+                
+                LmElement add = new LmElement("skiptag");
+                add.setFlagmentNode(true);
+                engine.getCurrentEnvironment().add(add);
+                PopedAction action = new PopedAction(){
+                    @Override
+                    public void poped(LamuriyanEngine engine ,Object option,TokenChain tc){
+                        engine.getCurrentEnvironment().setCurrentElement(current);
+                        engine.getCurrentEnvironment().setSettingTargetNode(settingNode);
+                    }
+                };
+                UseNotArgumentBlockMacro t = new UseNotArgumentBlockMacro("hbox",action,false);
+                return t;
+            }
+        });
+        
         //----挿入ノードの移動系統-------
         
         //ノードの保存系
@@ -1101,6 +1125,51 @@ public class Define_Macro{
                 return new Command(t1.toString(), ee);
             }
         });
+        
+        
+        def("\\setbox","#1=",new MacroProcess(){
+            
+            @Override
+            protected Object _run(LamuriyanEngine engine ,List<Token> args)
+                    throws Exception{
+                Token t = args.get(0);
+                if(!t.isNumber()){
+                    printError("\\setbox:レジストリ番号を見つけられませんでした。");
+                    return false;
+                }
+                int n = Integer.parseInt(t.toString());
+                String cname = "boxregistry"+n;
+                BoxContainer bc = engine.getCurrentEnvironment().setNextElementToBoxContainerFlag(null);
+                return new Command(cname, bc);
+            }
+        }).setUseNumber(true);
+        
+        def("\\box","#1",new MacroProcess(){
+            
+            @Override
+            protected Object _run(LamuriyanEngine engine ,List<Token> args)
+                    throws Exception{
+                Token t = args.get(0);
+                if(!t.isNumber()){
+                    printError("\\box:レジストリ番号を見つけられませんでした。");
+                    return false;
+                }
+                int n = Integer.parseInt(t.toString());
+                String cname = "boxregistry"+n;
+                Command c=engine.getCommand(cname);
+                if(c!=null && (c.get() instanceof BoxContainer)){
+                    LmElement e = ((BoxContainer)c.get()).element;
+                    LmElement p = e.getParent();
+                    if(p!=null){
+                        p.remove(e);
+                    }
+                    e.setIgnore(false);
+                    engine.getCurrentEnvironment().add(e, false);
+                    engine.removeCommand(cname);
+                }
+                return null;
+            }
+        }).setUseNumber(true);
         
         
         //設定系
@@ -2772,6 +2841,7 @@ public class Define_Macro{
         put("[#1]#2",chart('['),arg1,chart(']'),arg2);
         put("#1[#2]",arg1,chart('['),arg2,chart(']'));
         put("[#1][#2]",chart('['),arg1,chart(']'),chart('['),arg2,chart(']'));
+        put("#1=",arg1,chart('='));
         put("#1=#2",arg1,chart('='),arg2);
         put("=#1",chart('='),arg1);
         put("#1#2[#3]#4",arg1,arg2,chart('['),arg3,chart(']'),arg4);
@@ -2828,10 +2898,15 @@ public class Define_Macro{
     ,VERBEMODE=new Object(),DEFGLOBAL = new Object();
     
     
-    public static class TDef{
-        public final String name;
-        public TDef(String name){
-            this.name = name;
+    public static class UseNotArgumentBlockMacro{
+        public final PopedAction action;
+        public final String macroName;
+        public final boolean appendBlock;
+//        public final String name;
+        public UseNotArgumentBlockMacro(String macroName,PopedAction action,boolean appendBlock){
+            this.macroName=macroName;
+            this.action = action;
+            this.appendBlock=appendBlock;
         }
     }
 
@@ -2917,7 +2992,20 @@ public class Define_Macro{
                     printError("\\tdefの引数はエスケープシーケンスでなくてはなりません。");
                     return null;
                 }
-                TDef t = new TDef(a1.toString());
+                final String name = a1.toString();
+                PopedAction action = new PopedAction(){
+                    
+                    @Override
+                    public void poped(LamuriyanEngine engine ,Object option,TokenChain tc){
+                        boolean global = (Boolean)option;
+                      Command c = new Command(name, tc);
+                      if(global)
+                          engine.defineGlobalCommand(c);
+                      else
+                          engine.defineCommand(c);
+                    }
+                };
+                UseNotArgumentBlockMacro t = new UseNotArgumentBlockMacro("tdef",action,true);
                 return t;
             }
         });

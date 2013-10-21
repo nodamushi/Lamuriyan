@@ -19,7 +19,7 @@
 
 注意して貰いたい事は、\verb+\edef,\protedted@edef+はトークンを保持するだけであり、DOM（TeXで言えばBoxにあたるものか）を保持することは出来ません。\verb+\edef,\protected@edef+内部でDOMを作成した場合、環境に挿入されます。\verb+\Lamuriyan+(=\Lamuriyan)などはDOMを生成するコマンドなので、うっかり混ぜてしまうことがないよう注意してください。
 
-\tdef\vb{\verb+\tdefについて+}
+\tdef\vb{引数でないブロックを扱う\verb+\tdefについて+}
 \subsection{\vb}
 \Lamuriyanには\verb+\tdef+という特殊なトークンを展開し、保持するマクロが定義されています。基本的な使い方は\yen edefとほぼ同じです。
 

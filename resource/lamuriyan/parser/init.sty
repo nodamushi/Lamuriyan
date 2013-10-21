@@ -61,7 +61,7 @@
   
 
 % インラインでない要素を作成する
-\newcommand{\box}[3][]{%
+\newcommand{\block}[3][]{%
   \bgroup%
     \createElement{#2}%
     \parentmark\himp@memory%
@@ -363,7 +363,7 @@
 % 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\mfrag}[1]{\box{mfrag}{#1}}
+\newcommand{\mfrag}[1]{\block{mfrag}{#1}}
 \newcommand{\@mathgroup}[2]{%
   \@startchargroup#1%
   \bgroup#2\egroup%
@@ -404,7 +404,7 @@
   \@ifnextchar*{\@operatorname}{\@operatorname f}}
 
 \newcommand{\mfenced}[2][]{%
-   \box{mfenced}{\setAttrs{#1}\mfrag{#2}}}
+   \block{mfenced}{\setAttrs{#1}\mfrag{#2}}}
 \newcommand{\left}[1]{%
     \createElement{mfenced}\ifx#1. \setAttr{open}{}\else\setAttr{open}{#1}\fi%
     \createElement{mfrag}}
@@ -415,7 +415,7 @@
 %   #1
 % #2  #3
 \newcommand{\multiscripts}[5]{%
-  \box{mmultiscripts}{%
+  \block{mmultiscripts}{%
     \mfrag{#1}%
     \mfrag{#3}%
     \mfrag{#5}%
@@ -468,27 +468,27 @@
 
 
 \newcommand{\over}[2][]{%
-  \box{mover}{%
+  \block{mover}{%
     \setAttrs{#1}%
     \mfrag{#2}}}
 \newcommand{\under}[2][]{%
-  \box{munder}{%
+  \block{munder}{%
     \setAttrs{#1}%
     \mfrag{#2}}}
 
 \newcommand{\frac}[3][]{%
-  \box{mfrac}{%
+  \block{mfrac}{%
   \setAttrs{#1}%
   \mfrag{#2}\mfrag{#3}
 }}
 %sqrtに対して属性を設定したいときはsetsAttrを利用してください。
 %ちょうどいい解決策がなかった
 \newcommand{\sqrt}[2][]{%
-  \ifempty{#1}\box{msqrt}{\mfrag{#2}}\else%
-  \box{mroot}{\mfrag{#2}\mfrag{#1}}\fi}
+  \ifempty{#1}\block{msqrt}{\mfrag{#2}}\else%
+  \block{mroot}{\mfrag{#2}\mfrag{#1}}\fi}
 
 \newcommand{\enclose}[3][]{%
-  \box{menclose}{%
+  \block{menclose}{%
   \setAttrs{#1}%
   \setAttr{notation}{#2}%
   #3}}
@@ -497,9 +497,9 @@
    \enclose[#1]{roundedbox}{#2}}
 \newcommand{\circle}[2][]{\enclose[#1]{circle}{#2}}
 \newcommand{\statusline}[2][]{%
-  \box{maction}{\setAttrs{#1}\setAttr{actiontype}{statusline}#2}}
+  \block{maction}{\setAttrs{#1}\setAttr{actiontype}{statusline}#2}}
 \newcommand{\toggleaction}[2][]{%
-  \box{maction}{\setAttrs{#1}\setAttr{actiontype}{toggle}#2}}
+  \block{maction}{\setAttrs{#1}\setAttr{actiontype}{toggle}#2}}
 
 
 \newcommand{\cancel}[2][u]{%

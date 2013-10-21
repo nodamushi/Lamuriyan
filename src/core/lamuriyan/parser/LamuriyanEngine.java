@@ -658,18 +658,23 @@ while(processToken())
     }
     
     
-    private TDefBlock tdefblock;
+    private NotArgumentBlock tdefblock;
     private boolean tdefblockmode=false;
-    private String tdefname = null;
-    private boolean tdefglobal = false;
-    void startTDefBlockMode(String name,boolean global){
+//    private String tdefname = null;
+    private PopedAction nab_action=null;
+    private Object nab_option=null;
+//    private boolean tdefglobal = false;
+//    void startUseNotArgumentBlockMacroMode(String name,boolean global){
+    void startUseNotArgumentBlockMacroMode(PopedAction nab_action,Object nab_option){
         if(tdefblockmode){
-            printError("\\tdefは入れ子関係には出来ません。");
+            printError("引数でないブロックを扱うマクロは入れ子関係には出来ません。");
             return;
         }
         tdefblockmode = true;
-        tdefname = name;
-        tdefglobal = global;
+        this.nab_action=nab_action;
+        this.nab_option=nab_option;
+//        tdefname = name;
+//        tdefglobal = global;
     }
     
      boolean shouldCreateTDefBlock(){
@@ -677,26 +682,34 @@ while(processToken())
     }
     
     
-    boolean setTDefBlock(TDefBlock tblock){
+    boolean setNotArgumentBlock(NotArgumentBlock tblock){
         if(tdefblockmode && tdefblock==null){
             this.tdefblock = tblock;
-            tblock.setName(tdefname);
-            tblock.setGlobal(tdefglobal);
+            tblock.setAction(nab_action);
+            tblock.setOption(nab_option);
+//            tblock.setName(tdefname);
+//            tblock.setGlobal(tdefglobal);
             return true;
         }
         return false;
     }
     
-    void endTDefBlockMode(TDefBlock tblock){
+    void endTDefBlockMode(NotArgumentBlock tblock){
         if(this.tdefblock==tblock ){
            tdefblock = null;
            tdefblockmode=false;
-           tdefname=null;
+//           tdefname=null;
+           nab_action = null;
+           nab_option=null;
         }
     }
     
     
     private void outputToTDefBlock(){
+        if(tdefblock!=null&&!tdefblock.isAppendToThisBlock()){
+            outputToEnvironment();
+            return;
+        }
         while(!outputBuffer.isEmpty()){
             Token t = outputBuffer.pop();
             Token insertToken=null;//入力に戻すトークン
@@ -704,7 +717,8 @@ while(processToken())
                 if(tdefblock==null){
                     tdefblockmode =false;
                     tdefblock=null;
-                    tdefname=null;
+                    nab_action = null;
+                    nab_option=null;
                     outputBuffer.push(t);
                     printError("\\tdefの次には{が来なくてはなりません。"+t);
                     outputToEnvironment();
@@ -729,7 +743,8 @@ while(processToken())
                     if(tdefblock==null){
                         tdefblockmode =false;
                         tdefblock=null;
-                        tdefname=null;
+                        nab_action = null;
+                        nab_option=null;
                         outputBuffer.push(t);
                         printError("\\tdefの次には{が来なくてはなりません。"+t);
                         outputToEnvironment();
@@ -744,7 +759,8 @@ while(processToken())
                         if(tdefblock==null){
                             tdefblockmode =false;
                             tdefblock=null;
-                            tdefname=null;
+                            nab_action = null;
+                            nab_option=null;
                             outputBuffer.push(t);
                             printError("\\tdefの次には{が来なくてはなりません。"+t);
                             outputToEnvironment();
